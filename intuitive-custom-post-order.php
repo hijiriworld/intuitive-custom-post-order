@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Intuitive Custom Post Order
-Plugin URI: http://hijiriworld.com/web/
+Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
 Description: Intuitively, Order posts(posts, any custom post types) using a Drag and Drop Sortable JavaScript.
 Author: hijiri
 Author URI: http://hijiriworld.com/web/
-Version: 1.0.0
+Version: 1.1.0
 */
 
 /*  Copyright 2012 hijiri
@@ -79,12 +79,29 @@ class hicpo {
 
 /***************************************************************
 
+	edit posts per page hook
+
+***************************************************************/
+
+add_filter( 'edit_posts_per_page', 'hicpo_edit_post_per_page' );
+function hicpo_edit_post_per_page( $per_page, $post_type ) {
+	
+	$post_list_url = substr($_SERVER["REQUEST_URI"], -18, 18);
+	if ( (isset($_GET['post_type']) && $_GET['post_type'] != 'page') || $post_list_url == '/wp-admin/edit.php' ) {
+		$per_page = 999;
+	}
+	
+	return $per_page;
+}
+
+/***************************************************************
+
 	output filter hook
 
 ***************************************************************/
 
 add_filter( 'pre_get_posts', 'hicpo_pre_get_posts' );
-function hicpo_pre_get_posts($query) {
+function hicpo_pre_get_posts( $query ) {
 	// get_postsの場合 suppress_filters=true となる為、フィルタリングを有効にする
 	if ( isset($query->query['suppress_filters']) ) $query->query['suppress_filters'] = false;
 	if ( isset($query->query_vars['suppress_filters']) ) $query->query_vars['suppress_filters'] = false;
@@ -92,10 +109,19 @@ function hicpo_pre_get_posts($query) {
 }
 
 add_filter( 'posts_orderby', 'hicpo_posts_orderby' );
-function hicpo_posts_orderby($orderBy) {
+function hicpo_posts_orderby( $orderBy ) {
 	global $wpdb;
-	$orderBy = "{$wpdb->posts}.menu_order, {$wpdb->posts}.post_date DESC";
+	
+	// for admin
+	if ( is_admin() ) {
+		$orderBy = "{$wpdb->posts}.menu_order, {$wpdb->posts}.post_date DESC";
+	// for site
+	} else {
+		// orderおよびorderBy引数をユーザが指定していない場合のみ適用する
+		if ( $orderBy == "{$wpdb->posts}.post_date DESC" ) {
+			$orderBy = "{$wpdb->posts}.menu_order, {$wpdb->posts}.post_date DESC";
+		}
+	}
 	return( $orderBy );
 }
-
 ?>

@@ -3,7 +3,7 @@ Contributors: hijiri
 Tags: post order, posts order, order post, order posts, custom post type order
 Requires at least: 3.3
 Tested up to: 3.4.2
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,5 +26,11 @@ You can do directly on default WordPress administration.
 
 == Changelog ==
 
+= 1.1.0 =
+
+* In order to prevent the trouble due to not configuration of screen-per-page, automatically screen-per-page is configurated to 999.
+* Excluding custom query which uses 'order' or 'orderby' parameters, in 'get_posts' or 'query_posts' and so on.
+
 = 1.0.0 =
+
 Initial Release
