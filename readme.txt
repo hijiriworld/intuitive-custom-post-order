@@ -3,7 +3,7 @@ Contributors: hijiri
 Tags: post order, posts order, order post, order posts, custom post type order
 Requires at least: 3.3
 Tested up to: 3.4.2
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,6 +25,10 @@ You can do directly on default WordPress administration.
 1. Order posts
 
 == Changelog ==
+
+= 1.1.1 =
+
+* Update fixed
 
 = 1.1.0 =
 

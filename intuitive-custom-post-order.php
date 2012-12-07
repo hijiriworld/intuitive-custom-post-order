@@ -84,13 +84,12 @@ class hicpo {
 ***************************************************************/
 
 add_filter( 'edit_posts_per_page', 'hicpo_edit_post_per_page' );
-function hicpo_edit_post_per_page( $per_page, $post_type ) {
+function hicpo_edit_post_per_page( $per_page, $post_type = null ) {
 	
 	$post_list_url = substr($_SERVER["REQUEST_URI"], -18, 18);
 	if ( (isset($_GET['post_type']) && $_GET['post_type'] != 'page') || $post_list_url == '/wp-admin/edit.php' ) {
 		$per_page = 999;
 	}
-	
 	return $per_page;
 }
 
@@ -109,19 +108,19 @@ function hicpo_pre_get_posts( $query ) {
 }
 
 add_filter( 'posts_orderby', 'hicpo_posts_orderby' );
-function hicpo_posts_orderby( $orderBy ) {
+function hicpo_posts_orderby( $orderby ) {
 	global $wpdb;
 	
 	// for admin
 	if ( is_admin() ) {
-		$orderBy = "{$wpdb->posts}.menu_order, {$wpdb->posts}.post_date DESC";
+		$orderby = "{$wpdb->posts}.menu_order, {$wpdb->posts}.post_date DESC";
 	// for site
 	} else {
-		// orderおよびorderBy引数をユーザが指定していない場合のみ適用する
-		if ( $orderBy == "{$wpdb->posts}.post_date DESC" ) {
-			$orderBy = "{$wpdb->posts}.menu_order, {$wpdb->posts}.post_date DESC";
+		// orderおよびorderby引数をユーザが指定していない場合のみ適用する
+		if ( $orderby == "{$wpdb->posts}.post_date DESC" ) {
+			$orderby = "{$wpdb->posts}.menu_order, {$wpdb->posts}.post_date DESC";
 		}
 	}
-	return( $orderBy );
+	return $orderby;
 }
 ?>
