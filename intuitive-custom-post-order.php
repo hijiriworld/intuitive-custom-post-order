@@ -5,7 +5,7 @@ Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
 Description: Intuitively, Order posts(posts, any custom post types) using a Drag and Drop Sortable JavaScript.
 Author: hijiri
 Author URI: http://hijiriworld.com/web/
-Version: 1.1.0
+Version: 1.1.1
 */
 
 /*  Copyright 2012 hijiri
