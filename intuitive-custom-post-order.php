@@ -5,7 +5,7 @@ Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
 Description: Intuitively, Order posts(posts, any custom post types) using a Drag and Drop Sortable JavaScript.
 Author: hijiri
 Author URI: http://hijiriworld.com/web/
-Version: 1.1.1
+Version: 1.2.0
 */
 
 /*  Copyright 2012 hijiri
@@ -54,18 +54,22 @@ class hicpo {
 	}
 	
 	function regist_files() {
-		// 投稿、カスタム投稿のみ対象、固定ページは除外
+		// Apply to Post and Custom Post Type, Exclude Page
 		$post_list_url = substr($_SERVER["REQUEST_URI"], -18, 18);
 		if ( (isset($_GET['post_type']) && $_GET['post_type'] != 'page') || $post_list_url == '/wp-admin/edit.php' ) {
+			// load JavaScript
 			wp_enqueue_script( 'jQuery' );
 			wp_enqueue_script( 'jquery-ui-sortable' );
 			wp_enqueue_script( 'hicpojs', hicpo_URL.'/js/hicpo.js', null, true );
+			// load CSS
+			echo '<link rel="stylesheet" type="text/css" href="'.hicpo_URL.'/css/hicpo.css">';
+			
 		}
 	}
 	
 	function save_menu_order() {
 		global $wpdb;
-		// serialize文字列を menu_order に登録
+		// update 'menu_order' with serialize strings
 		parse_str($_POST['order'], $data);
 		if ( is_array($data) ) {
 			foreach( $data as $key => $values ) {
