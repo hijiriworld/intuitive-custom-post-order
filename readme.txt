@@ -28,6 +28,10 @@ Excluding custom query which uses 'order' or 'orderby' parameters, in 'get_posts
 
 == Changelog ==
 
+= 1.2.1 =
+
+* Bug fixed
+
 = 1.2.0 =
 
 * Sortable UI that Visually cleared. (Change cursor, and so on.)
