@@ -1,9 +1,9 @@
 === Intuitive Custom Post Order ===
 Contributors: hijiri
 Tags: post order, posts order, order post, order posts, custom post type order
-Requires at least: 3.3
-Tested up to: 3.4.2
-Stable tag: 1.2.0
+Requires at least: 3.0.0
+Tested up to: 3.5.1
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,12 +21,21 @@ Excluding custom query which uses 'order' or 'orderby' parameters, in 'get_posts
 
 1. Upload 'intuitive-custom-post-order' folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
+3. (Optional) Navigate to the Intuitive CPT Menu
 
 == Screenshots ==
 
 1. Order posts
 
 == Changelog ==
+
+= 2.0.0 =
+
+* Select Sortable Objects. (Posts, Pages, and Custom Post Types)
+* Sortable Item's status is not only 'publish' but also other all status('pending', 'draft', 'private', 'future').
+* In lists which sorted any category(Category, Tag, Taxonomy), it's all activated normaly. So, 'screen-per-page' is User like.
+* Support Child posts and Child pages. When you sort any item, Relation of parent item between it's child items is maintained.
+* Bug fixed
 
 = 1.2.1 =
 
