@@ -25,7 +25,7 @@ Excluding custom query which uses 'order' or 'orderby' parameters, in 'get_posts
 
 == Screenshots ==
 
-1. Order posts
+1. Order items
 
 == Changelog ==
 
