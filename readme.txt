@@ -32,6 +32,7 @@ Excluding custom query which uses 'order' or 'orderby' parameters, in 'get_posts
 = 2.0.0 =
 
 * Select Sortable Objects. (Posts, Pages, and Custom Post Types)
+* Support Pages and hierarchical Custom Post Types.
 * Sortable Item's status is not only 'publish' but also other all status('pending', 'draft', 'private', 'future').
 * In lists which sorted any category(Category, Tag, Taxonomy), it's all activated normaly. So, 'screen-per-page' is User like.
 * Support Child posts and Child pages. When you sort any item, Relation of parent item between it's child items is maintained.
