@@ -7,15 +7,15 @@ Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Intuitively, Order posts(posts, any custom post types) using a Drag and Drop Sortable JavaScript.
+Intuitively, Order Items (Posts, Pages, and Custom Post Types) using a Drag and Drop Sortable JavaScript.
 
 == Description ==
 
-Intuitively, Order posts(posts, any custom post types) using a Drag and Drop Sortable JavaScript.
+Intuitively, Order Items (Posts, Pages, and Custom Post Types) using a Drag and Drop Sortable JavaScript.
 Configuration is unnecessary.
 You can do directly on default WordPress administration.
 
-Excluding custom query which uses 'order' or 'orderby' parameters, in 'get_posts' or 'query_posts' and so on.
+Excluding Custom Query which uses 'order' or 'orderby' parameters, in query_posts()', 'WP_Query()', and 'get_posts'.
 
 == Installation ==
 
@@ -29,6 +29,10 @@ Excluding custom query which uses 'order' or 'orderby' parameters, in 'get_posts
 
 == Changelog ==
 
+= 2.0.1 =
+
+* Bug fixed
+
 = 2.0.0 =
 
 * Select Sortable Objects. (Posts, Pages, and Custom Post Types)
@@ -37,7 +41,6 @@ Excluding custom query which uses 'order' or 'orderby' parameters, in 'get_posts
 * In Paging, it's all activated normaly. So, 'screen-per-page' is User like.
 * In Lists which sorted any category(Category, Tag, Taxonomy), it's all activated normaly.
 * Support Child posts and Child pages. When you sort any item, Relation of parent item between it's child items is maintained.
-* Bug fixed
 
 = 1.2.1 =
 
