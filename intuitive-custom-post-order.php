@@ -48,19 +48,6 @@ class Hicpo
 {
 	function __construct()
 	{
-		register_activation_hook( __FILE__, array( &$this, 'hicpo_install') );
-		
-		add_action( 'admin_menu', array( &$this, 'admin_menu') );
-		
-		add_action( 'admin_init', array( &$this, 'refresh' ) );
-		add_action( 'admin_init', array( &$this, 'update_options') );
-		add_action( 'init', array( &$this, 'enable_objects' ) );
-		
-		add_action( 'wp_ajax_update-menu-order', array( &$this, 'update_menu_order' ) );
-	}
-	
-	function hicpo_install()
-	{
 		if ( !get_option('hicpo_options') ) {
 		
 			$post_types = get_post_types( array (
@@ -74,6 +61,14 @@ class Hicpo
 			
 			update_option( 'hicpo_options', $input_options );
 		}
+		
+		add_action( 'admin_menu', array( &$this, 'admin_menu') );
+		
+		add_action( 'admin_init', array( &$this, 'refresh' ) );
+		add_action( 'admin_init', array( &$this, 'update_options') );
+		add_action( 'init', array( &$this, 'enable_objects' ) );
+		
+		add_action( 'wp_ajax_update-menu-order', array( &$this, 'update_menu_order' ) );
 	}
 	
 	function admin_menu()
