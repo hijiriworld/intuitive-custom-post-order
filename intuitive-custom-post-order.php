@@ -3,7 +3,7 @@
 Plugin Name: Intuitive Custom Post Order
 Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
 Description: Intuitively, Order Items (Posts, Pages, and Custom Post Types) using a Drag and Drop Sortable JavaScript.
-Version: 2.0.1
+Version: 2.0.2
 Author: hijiri
 Author URI: http://hijiriworld.com/web/
 */
@@ -48,19 +48,7 @@ class Hicpo
 {
 	function __construct()
 	{
-		if ( !get_option('hicpo_options') ) {
-		
-			$post_types = get_post_types( array (
-				'public' => true
-				), 'objects' );
-			
-			foreach ($post_types as $post_type ) {
-				$init_objects[] = $post_type->name;
-			}
-			$input_options = array( 'objects' => $init_objects );
-			
-			update_option( 'hicpo_options', $input_options );
-		}
+		if ( !get_option('hicpo_options') ) $this->hicpo_install();
 		
 		add_action( 'admin_menu', array( &$this, 'admin_menu') );
 		
@@ -69,6 +57,49 @@ class Hicpo
 		add_action( 'init', array( &$this, 'enable_objects' ) );
 		
 		add_action( 'wp_ajax_update-menu-order', array( &$this, 'update_menu_order' ) );
+	}
+	
+	function hicpo_install()
+	{
+		global $wpdb;
+		
+		// Initialize : hicpo_options
+		
+		$post_types = get_post_types( array (
+			'public' => true
+			), 'objects' );
+		
+		foreach ($post_types as $post_type ) {
+			$init_objects[] = $post_type->name;
+		}
+		$input_options = array( 'objects' => $init_objects );
+		
+		update_option( 'hicpo_options', $input_options );
+		
+		
+		// Initialize : menu_order from date_post
+		
+		$hicpo_options = get_option( 'hicpo_options' );
+		$objects = $hicpo_options['objects'];
+		
+		foreach( $objects as $object) {
+			$sql = "SELECT
+						ID
+					FROM
+						$wpdb->posts
+					WHERE
+						post_type = '".$object."'
+						AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+					ORDER BY
+						post_date DESC
+					";
+				
+			$results = $wpdb->get_results($sql);
+			
+			foreach( $results as $key => $result ) {
+				$wpdb->update( $wpdb->posts, array( 'menu_order' => $key+1 ), array( 'ID' => $result->ID ) );
+			}
+		}
 	}
 	
 	function admin_menu()
@@ -125,8 +156,7 @@ class Hicpo
 		
 		foreach( $objects as $object) {
 			$sql = "SELECT
-						ID,
-						menu_order
+						ID
 					FROM
 						$wpdb->posts
 					WHERE

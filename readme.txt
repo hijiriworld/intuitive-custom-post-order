@@ -21,7 +21,7 @@ Excluding Custom Query which uses 'order' or 'orderby' parameters, in query_post
 
 1. Upload 'intuitive-custom-post-order' folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. (Optional) Navigate to the Intuitive CPT Menu
+3. (Optional) Select Sortable Objects from Intuitive CPT Menu
 
 == Screenshots ==
 
@@ -29,7 +29,7 @@ Excluding Custom Query which uses 'order' or 'orderby' parameters, in query_post
 
 == Changelog ==
 
-= 2.0.1 =
+= 2.0.2 =
 
 * Bug fixed
 
