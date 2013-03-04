@@ -3,7 +3,7 @@
 Plugin Name: Intuitive Custom Post Order
 Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
 Description: Intuitively, Order Items (Posts, Pages, and Custom Post Types) using a Drag and Drop Sortable JavaScript.
-Version: 2.0.2
+Version: 2.0.3
 Author: hijiri
 Author URI: http://hijiriworld.com/web/
 */
@@ -42,7 +42,7 @@ load_plugin_textdomain( 'hicpo', false, basename(dirname(__FILE__)).'/lang' );
 
 ***************************************************************/
 
-$hicpo = new Hicpo();
+$hicpo = new Hicpo();
 
 class Hicpo
 {
@@ -104,7 +104,7 @@ class Hicpo
 	
 	function admin_menu()
 	{
-		add_utility_page( __('Intuitive CPO', 'hicpo'), __('Intuitive CPO', 'hicpo'), 'manage_options', 'hicpo-settings', array( &$this,'admin_page' ));
+		add_options_page( __('Intuitive CPO', 'hicpo'), __('Intuitive CPO', 'hicpo'), 'manage_options', 'hicpo-settings', array( &$this,'admin_page' ));
 	}
 	
 	function admin_page()
