@@ -29,6 +29,10 @@ Excluding Custom Query which uses 'order' or 'orderby' parameters, in query_post
 
 == Changelog ==
 
+= 2.0.3 =
+
+* Intuitive CPO Settings Page was moved to Settings menu.
+
 = 2.0.2 =
 
 * Bug fixed
