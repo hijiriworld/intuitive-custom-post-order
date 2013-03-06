@@ -3,7 +3,7 @@
 Plugin Name: Intuitive Custom Post Order
 Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
 Description: Intuitively, Order Items (Posts, Pages, and Custom Post Types) using a Drag and Drop Sortable JavaScript.
-Version: 2.0.3
+Version: 2.0.4
 Author: hijiri
 Author URI: http://hijiriworld.com/web/
 */
@@ -117,23 +117,25 @@ class Hicpo
 		$hicpo_options = get_option( 'hicpo_options' );
 		$objects = $hicpo_options['objects'];
 		
-		$active = false;
-		
-		// for Pages or Custom Post Types
-		if ( isset($_GET['post_type']) ) {
-			if ( in_array( $_GET['post_type'], $objects ) ) {
-				$active = true;
+		if ( is_array( $objects ) ) {
+			$active = false;
+			
+			// for Pages or Custom Post Types
+			if ( isset($_GET['post_type']) ) {
+				if ( in_array( $_GET['post_type'], $objects ) ) {
+					$active = true;
+				}
+			// for Posts
+			} else {
+				$post_list = strstr( $_SERVER["REQUEST_URI"], 'wp-admin/edit.php' );
+				if ( $post_list && in_array( 'post', $objects ) ) {
+					$active = true;
+				}
 			}
-		// for Posts
-		} else {
-			$post_list = strstr( $_SERVER["REQUEST_URI"], 'wp-admin/edit.php' );
-			if ( $post_list && in_array( 'post', $objects ) ) {
-				$active = true;
+			
+			if ( $active ) {
+				$this->load_script_css();	
 			}
-		}
-		
-		if ( $active ) {
-			$this->load_script_css();	
 		}
 	}
 	
@@ -154,23 +156,25 @@ class Hicpo
 		$hicpo_options = get_option( 'hicpo_options' );
 		$objects = $hicpo_options['objects'];
 		
-		foreach( $objects as $object) {
-			$sql = "SELECT
-						ID
-					FROM
-						$wpdb->posts
-					WHERE
-						post_type = '".$object."'
-						AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
-					ORDER BY
-						menu_order ASC
-					";
-					
-			$results = $wpdb->get_results($sql);
-			
-			foreach( $results as $key => $result ) {
-				// 新規追加した場合「menu_order=0」で登録されるため、常に1からはじまるように振っておく
-				$wpdb->update( $wpdb->posts, array( 'menu_order' => $key+1 ), array( 'ID' => $result->ID ) );
+		if ( is_array( $objects ) ) {
+			foreach( $objects as $object) {
+				$sql = "SELECT
+							ID
+						FROM
+							$wpdb->posts
+						WHERE
+							post_type = '".$object."'
+							AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+						ORDER BY
+							menu_order ASC
+						";
+						
+				$results = $wpdb->get_results($sql);
+				
+				foreach( $results as $key => $result ) {
+					// 新規追加した場合「menu_order=0」で登録されるため、常に1からはじまるように振っておく
+					$wpdb->update( $wpdb->posts, array( 'menu_order' => $key+1 ), array( 'ID' => $result->ID ) );
+				}
 			}
 		}
 	}
@@ -215,10 +219,14 @@ class Hicpo
 	function update_options()
 	{
 		if ( isset( $_POST['hicpo_submit'] ) ) {
-		
+			
 			check_admin_referer( 'nonce_hicpo' );
 			
-			$input_options = array( 'objects' => $_POST['objects'] );
+			if ( isset( $_POST['objects'] ) ) {
+				$input_options = array( 'objects' => $_POST['objects'] );
+			} else {
+				$input_options = array( 'objects' => '' );
+			}
 			
 			update_option( 'hicpo_options', $input_options );
 			wp_redirect( 'admin.php?page=hicpo-settings&msg=update' );
@@ -249,62 +257,44 @@ function hicpo_pre_get_posts( $wp_query )
 	$hicpo_options = get_option('hicpo_options');
 	$objects = $hicpo_options['objects'];
 	
-	// for Admin ---------------------------------------------------------------
+	if ( is_array( $objects ) ) {
 	
-	if ( is_admin() && !defined( 'DOING_AJAX' ) ) {
-	
-		// post_type=post or page or custom post type
-		// adminの場合、post_tyope=postも渡される
-		if ( isset( $wp_query->query['post_type'] ) ) {
-			if ( in_array( $wp_query->query['post_type'], $objects ) ) {
-				$wp_query->set( 'orderby', 'menu_order' );
-				$wp_query->set( 'order', 'ASC' );
-			}
-		}
-	
-	// for Template ------------------------------------------------------------
-	
-	} else {
+		// for Admin ---------------------------------------------------------------
 		
-		$active = false;
+		if ( is_admin() && !defined( 'DOING_AJAX' ) ) {
 		
-		// postsのWordpressループ ----------------
-		
-		// $wp_query->queryが空配列の場合
-		// WordPressループでもposts以外はpost_typeが渡される
-		
-		if ( empty( $wp_query->query ) ) {
-			if ( in_array( 'post', $objects ) ) {
-				$active = true;
-			}
-		} else {
-		
-			// get_posts() ----------------------
-		
-			// 完全な判別ではないが、suppress_filtersパラメータの有無で判別
-			// get_posts()の場合、post_type, orderby, orderパラメータは必ず渡される
-		
-			if ( isset($wp_query->query['suppress_filters']) ) {
-				
-				// post_type判定
-				if ( is_array( $wp_query->query['post_type'] ) ) {
-					$post_types = $wp_query->query['post_type'];
-					foreach( $post_types as $post_type ) {
-						if ( in_array( $post_type, $objects ) ) {
-							$active = true;
-						}
-					}
-				} else {
-					if ( in_array( $wp_query->query['post_type'], $objects ) ) {
-						$active = true;
-					}
+			// post_type=post or page or custom post type
+			// adminの場合、post_tyope=postも渡される
+			if ( isset( $wp_query->query['post_type'] ) ) {
+				if ( in_array( $wp_query->query['post_type'], $objects ) ) {
+					$wp_query->set( 'orderby', 'menu_order' );
+					$wp_query->set( 'order', 'ASC' );
 				}
-					
-			// query_posts() or WP_Query()
+			}
+		
+		// for Template ------------------------------------------------------------
+		
+		} else {
+			
+			$active = false;
+			
+			// postsのWordpressループ ----------------
+			
+			// $wp_query->queryが空配列の場合
+			// WordPressループでもposts以外はpost_typeが渡される
+			
+			if ( empty( $wp_query->query ) ) {
+				if ( in_array( 'post', $objects ) ) {
+					$active = true;
+				}
 			} else {
-				
-				// post_typeが指定されている場合
-				if ( isset( $wp_query->query['post_type'] ) ) {
+			
+				// get_posts() ----------------------
+			
+				// 完全な判別ではないが、suppress_filtersパラメータの有無で判別
+				// get_posts()の場合、post_type, orderby, orderパラメータは必ず渡される
+			
+				if ( isset($wp_query->query['suppress_filters']) ) {
 					
 					// post_type判定
 					if ( is_array( $wp_query->query['post_type'] ) ) {
@@ -319,19 +309,40 @@ function hicpo_pre_get_posts( $wp_query )
 							$active = true;
 						}
 					}
-				// post_typeが指定されてい場合はpost_type=post
+						
+				// query_posts() or WP_Query()
 				} else {
-					if ( in_array( 'post', $objects ) ) {
-						$active = true;
+					
+					// post_typeが指定されている場合
+					if ( isset( $wp_query->query['post_type'] ) ) {
+						
+						// post_type判定
+						if ( is_array( $wp_query->query['post_type'] ) ) {
+							$post_types = $wp_query->query['post_type'];
+							foreach( $post_types as $post_type ) {
+								if ( in_array( $post_type, $objects ) ) {
+									$active = true;
+								}
+							}
+						} else {
+							if ( in_array( $wp_query->query['post_type'], $objects ) ) {
+								$active = true;
+							}
+						}
+					// post_typeが指定されてい場合はpost_type=post
+					} else {
+						if ( in_array( 'post', $objects ) ) {
+							$active = true;
+						}
 					}
-				}
-			}	
+				}	
+			}
+			
+			if ( $active ) {
+				if ( !isset( $wp_query->query['orderby'] ) || $wp_query->query['orderby'] == 'post_date' ) $wp_query->set( 'orderby', 'menu_order' );
+				if ( !isset( $wp_query->query['order'] ) || $wp_query->query['order'] == 'DESC' ) $wp_query->set( 'order', 'ASC' );
+			}				
 		}
-		
-		if ( $active ) {
-			if ( !isset( $wp_query->query['orderby'] ) || $wp_query->query['orderby'] == 'post_date' ) $wp_query->set( 'orderby', 'menu_order' );
-			if ( !isset( $wp_query->query['order'] ) || $wp_query->query['order'] == 'DESC' ) $wp_query->set( 'order', 'ASC' );
-		}				
-	}	
+	}
 }
 ?>
