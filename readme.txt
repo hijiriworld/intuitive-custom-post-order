@@ -3,7 +3,7 @@ Contributors: hijiri
 Tags: post order, posts order, order post, order posts, custom post type order
 Requires at least: 3.0.0
 Tested up to: 3.8.0
-Stable tag: 2.0.7
+Stable tag: 2.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,11 +29,15 @@ Excluding Custom Query which uses 'order' or 'orderby' parameters, in query_post
 
 == Changelog ==
 
+= 2.0.8 =
+
+* Performance improvement for Admin.
+  Refresh method( re-constructing all menu order) run on only active object's List page.
+
 = 2.0.7 =
 
 * Bug fixed.
   for WordPress 3.8
-
 * Add Swedish Translations.(by Thomas)
 
 = 2.0.6 =

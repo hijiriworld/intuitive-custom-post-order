@@ -3,7 +3,7 @@
 Plugin Name: Intuitive Custom Post Order
 Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
 Description: Intuitively, Order Items (Posts, Pages, and Custom Post Types) using a Drag and Drop Sortable JavaScript.
-Version: 2.0.7
+Version: 2.0.8
 Author: hijiri
 Author URI: http://hijiriworld.com/web/
 */
@@ -54,7 +54,7 @@ class Hicpo
 		
 		add_action( 'admin_init', array( &$this, 'refresh' ) );
 		add_action( 'admin_init', array( &$this, 'update_options') );
-		add_action( 'init', array( &$this, 'enable_objects' ) );
+		add_action( 'init', array( &$this, 'load_script_css' ) );
 		
 		add_action( 'wp_ajax_update-menu-order', array( &$this, 'update_menu_order' ) );
 		
@@ -122,17 +122,19 @@ class Hicpo
 		require HICPO_DIR.'admin/settings.php';
 	}
 	
-	function enable_objects()
-	{
+	function _check_active_objects() {
+		
+		$active = false;
+		
 		$hicpo_options = get_option( 'hicpo_options' );
 		$objects = $hicpo_options['objects'];
 		
 		if ( is_array( $objects ) ) {
-			$active = false;
-			
+			strstr( $_SERVER["REQUEST_URI"], 'wp-admin/post-new.php' );
 			// for Pages or Custom Post Types
 			if ( isset($_GET['post_type']) ) {
-				if ( in_array( $_GET['post_type'], $objects ) ) {
+				// not post new page
+				if ( in_array( $_GET['post_type'], $objects ) && !strstr( $_SERVER["REQUEST_URI"], 'wp-admin/post-new.php' ) ) {
 					$active = true;
 				}
 			// for Posts
@@ -142,48 +144,49 @@ class Hicpo
 					$active = true;
 				}
 			}
-			
-			if ( $active ) {
-				$this->load_script_css();	
-			}
 		}
+		if ( $active ) return true;
 	}
 	
 	function load_script_css() {
-		// load JavaScript
-		wp_enqueue_script( 'jQuery' );
-		wp_enqueue_script( 'jquery-ui-sortable' );
-		wp_enqueue_script( 'hicpojs', HICPO_URL.'/js/hicpo.js', array( 'jquery' ), null, true );
-		// load CSS
-		wp_enqueue_style( 'hicpo', HICPO_URL.'/css/hicpo.css', array(), null );
+		if ( $this->_check_active_objects() ) {	
+			// load JavaScript
+			wp_enqueue_script( 'jQuery' );
+			wp_enqueue_script( 'jquery-ui-sortable' );
+			wp_enqueue_script( 'hicpojs', HICPO_URL.'/js/hicpo.js', array( 'jquery' ), null, true );
+			// load CSS
+			wp_enqueue_style( 'hicpo', HICPO_URL.'/css/hicpo.css', array(), null );
+		}
 	}
 	
 	function refresh()
 	{
-		// menu_orderを再構築する
-		global $wpdb;
-		
-		$hicpo_options = get_option( 'hicpo_options' );
-		$objects = $hicpo_options['objects'];
-		
-		if ( is_array( $objects ) ) {
-			foreach( $objects as $object) {
-				$sql = "SELECT
-							ID
-						FROM
-							$wpdb->posts
-						WHERE
-							post_type = '".$object."'
-							AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
-						ORDER BY
-							menu_order ASC
-						";
-						
-				$results = $wpdb->get_results($sql);
-				
-				foreach( $results as $key => $result ) {
-					// 新規追加した場合「menu_order=0」で登録されるため、常に1からはじまるように振っておく
-					$wpdb->update( $wpdb->posts, array( 'menu_order' => $key+1 ), array( 'ID' => $result->ID ) );
+		if ( $this->_check_active_objects() ) {
+			// menu_orderを再構築する
+			global $wpdb;
+			
+			$hicpo_options = get_option( 'hicpo_options' );
+			$objects = $hicpo_options['objects'];
+			
+			if ( is_array( $objects ) ) {
+				foreach( $objects as $object) {
+					$sql = "SELECT
+								ID
+							FROM
+								$wpdb->posts
+							WHERE
+								post_type = '".$object."'
+								AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+							ORDER BY
+								menu_order ASC
+							";
+							
+					$results = $wpdb->get_results($sql);
+					
+					foreach( $results as $key => $result ) {
+						// 新規追加した場合「menu_order=0」で登録されるため、常に1からはじまるように振っておく
+						$wpdb->update( $wpdb->posts, array( 'menu_order' => $key+1 ), array( 'ID' => $result->ID ) );
+					}
 				}
 			}
 		}
