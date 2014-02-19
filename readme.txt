@@ -1,7 +1,7 @@
 === Intuitive Custom Post Order ===
 Contributors: hijiri
 Tags: post order, posts order, order post, order posts, custom post type order
-Requires at least: 3.0.0
+Requires at least: 3.8.0
 Tested up to: 3.8.0
 Stable tag: 2.0.8
 License: GPLv2 or later
