@@ -15,7 +15,7 @@ Intuitively, Order Items (Posts, Pages, and Custom Post Types) using a Drag and 
 Configuration is unnecessary.
 You can do directly on default WordPress administration.
 
-Excluding Custom Query which uses 'order' or 'orderby' parameters, in query_posts()', 'WP_Query()', and 'get_posts'.
+Custom Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Query()', 'get_posts()', 'query_posts()' )
 
 == Installation ==
 
