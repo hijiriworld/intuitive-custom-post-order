@@ -23,28 +23,51 @@ $objects = $hicpo_options['objects'];
 
 <?php if ( function_exists( 'wp_nonce_field' ) ) wp_nonce_field( 'nonce_hicpo' ); ?>
 
+<div id="hicpo_select_objects">
+
 <table class="form-table">
-<tbody>
-	<tr valign="top">
-		<th scope="row"><label for="blogname"><?php _e('Sortable Objects', 'hicpo') ?></label></th>
-		<td>
-		<?php
-			$post_types = get_post_types( array (
-				'public' => true
-			), 'objects' );
-			
-			foreach ($post_types  as $post_type ) {
-				if ( $post_type->name != 'attachment' ) {
-				?>
-				<label><input type="checkbox" name="objects[]" value="<?php echo $post_type->name; ?>" <?php if ( isset($objects) && is_array($objects) ) { if ( in_array($post_type->name, $objects )) { echo 'checked="checked"'; } } ?> />&nbsp;<?php echo $post_type->label; ?></label><br />
-				<?php
+	<tbody>
+		<tr valign="top">
+			<th scope="row"><?php _e('Sortable Objects', 'hicpo') ?></th>
+			<td>
+			<?php
+				$post_types = get_post_types( array (
+					'public' => true
+				), 'objects' );
+				
+				foreach ($post_types  as $post_type ) {
+					if ( $post_type->name != 'attachment' ) {
+					?>
+					<label><input type="checkbox" name="objects[]" value="<?php echo $post_type->name; ?>" <?php if ( isset($objects) && is_array($objects) ) { if ( in_array($post_type->name, $objects )) { echo 'checked="checked"'; } } ?> />&nbsp;<?php echo $post_type->label; ?></label><br />
+					<?php
+					}
 				}
-			}
-		?>
-		</td>
-	</tr>
-</tbody>
+			?>
+			</td>
+		</tr>
+	</tbody>
 </table>
+
+</div>
+
+<label><input type="checkbox" id="hicpo_allcheck"> <?php _e('All Check', 'hicpo') ?></label>
+
+<script>
+(function($){
+
+	$("#hicpo_allcheck").on('click', function(){
+		
+		var items = $("#hicpo_select_objects input");
+		
+		if ( $(this).is(':checked') ) {
+			$(items).prop('checked', true);
+		} else {
+			$(items).prop('checked', false);	
+		}
+	});
+
+})(jQuery)
+</script>
 
 <p class="submit">
 	<input type="submit" class="button-primary" name="hicpo_submit" value="<?php _e('Update', 'cptg'); ?>" />

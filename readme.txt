@@ -1,9 +1,9 @@
 === Intuitive Custom Post Order ===
 Contributors: hijiri
 Tags: post order, posts order, order post, order posts, custom post type order
-Requires at least: 3.8.0
-Tested up to: 3.8.0
-Stable tag: 2.0.8
+Requires at least: 3.5.0
+Tested up to: 3.8.1
+Stable tag: 2.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,6 +28,15 @@ Excluding Custom Query which uses 'order' or 'orderby' parameters, in query_post
 1. Order items
 
 == Changelog ==
+
+= 2.0.9 =
+
+* Performance improvement for Admin.
+  Fatal performance problem was improved dramatically.
+* Bug fixed.
+  Attachment objects are not broken.
+  Alert warning on the multisite was solved.
+* Custom Query which uses 'order' or 'orderby' parameters is preferred.
 
 = 2.0.8 =
 
