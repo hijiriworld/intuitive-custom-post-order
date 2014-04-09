@@ -36,6 +36,7 @@ Custom Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Quer
 * Bug fixed.
   Attachment objects are not broken.
   Alert warning on the multisite was solved.
+  First when enabling items, 'menu order' of items are not broken.
 * Custom Query which uses 'order' or 'orderby' parameters is preferred.
 
 = 2.0.8 =
