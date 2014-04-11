@@ -3,7 +3,7 @@
 Plugin Name: Intuitive Custom Post Order
 Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
 Description: Intuitively, Order Items (Posts, Pages, and Custom Post Types) using a Drag and Drop Sortable JavaScript.
-Version: 2.0.9
+Version: 2.1.0
 Author: hijiri
 Author URI: http://hijiriworld.com/web/
 */
@@ -361,19 +361,19 @@ class Hicpo
 				
 				/*
 				
-				get_posts()
+				post_type が有効オブジェクトかどうかを判別
 				
-				suppress_filtersパラメータの有無で判別（不完全な判別）
-				get_posts()の場合、args指定がなくても、query配列に post_type=post, orderby=date, order=DESC の初期値が必ず渡される
+				$wp_query->query['post_type'] で判別
+				ディフォルトのクエリの場合、$args指定がないため
 				
 				*/
+					
+				$active = false;
+					
+				// post_typeが指定されている場合
 				
-				if ( isset( $wp_query->query['suppress_filters'] ) ) {
-					
-					$active = false;
-					
-					// post_typeが複数指定されている場合、対象オブジェクトがひとつでも含まれていた場合は並び替え有効とする
-					
+				if ( isset( $wp_query->query['post_type'] ) ) {
+					// 複数指定の場合は、いずれかひとつでも該当すれば有効
 					if ( is_array( $wp_query->query['post_type'] ) ) {
 						$post_types = $wp_query->query['post_type'];
 						foreach( $post_types as $post_type ) {
@@ -386,90 +386,72 @@ class Hicpo
 							$active = true;
 						}
 					}
-					
-					if ( $active ) {
-						
-						// active orderby=menu_order
-						if ( isset( $wp_query->query['orderby'] ) && $wp_query->query['orderby'] == 'date' && !isset( $args['orderby'] ) ) {
-							$wp_query->set( 'orderby', 'menu_order' );
-						}
-						// active order=ASC
-						if ( isset( $wp_query->query['order'] ) && $wp_query->query['order'] == 'DESC' && !isset( $args['order'] ) ) {
-							$wp_query->set( 'order', 'ASC' );
-						}
-						
+				// post_typeが指定されていなければpost
+				} else {
+					if ( in_array( 'post', $objects ) ) {
+						$active = true;
 					}
-						
+				}
+
 				/*
 				
-				query_posts(), WP_Query()
-				
-				args指定があってもargs配列は存在しない
-				args指定がない場合、query配列に初期値は渡されない
+				$args が存在した場合はそちらを優先する
 				
 				*/
 				
-				} else {
-					$active = false;
+				if ( $active ) {
 					
-					// post_typeが指定されている場合
-					if ( isset( $wp_query->query['post_type'] ) ) {
-						
-						if ( is_array( $wp_query->query['post_type'] ) ) {
-							$post_types = $wp_query->query['post_type'];
-							foreach( $post_types as $post_type ) {
-								if ( in_array( $post_type, $objects ) ) {
-									$active = true;
-								}
+					if ( isset( $args ) ) {
+						// args = array( 'orderby' => 'date', 'order' => 'DESC' );
+						if ( is_array( $args ) ) {
+							if ( !isset( $args['orderby'] ) ) {
+								$wp_query->set( 'orderby', 'menu_order' );
 							}
+							if ( !isset( $args['order'] ) ) {
+								$wp_query->set( 'order', 'ASC' );
+							}
+						// args = 'orderby=date&order=DESC';
 						} else {
-							if ( in_array( $wp_query->query['post_type'], $objects ) ) {
-								$active = true;
+							if ( !strstr( $args, 'orderby=' ) ) {
+								$wp_query->set( 'orderby', 'menu_order' );
+							}
+							if ( !strstr( $args, 'order=' ) ) {
+								$wp_query->set( 'order', 'ASC' );
+								
 							}
 						}
-					// post_typeが指定されていない場合は post_type=post
 					} else {
-						if ( in_array( 'post', $objects ) ) {
-							$active = true;
-						}
-					}
-					
-					if ( $active ) {
-					
-						// active orderby=menu_order
-						if ( !isset( $wp_query->query['orderby'] ) ) {
-							$wp_query->set( 'orderby', 'menu_order' );
-						}
-						// active order=ASC
-						if ( !isset( $wp_query->query['order'] ) ) {
-							$wp_query->set( 'order', 'ASC' );
-						}
+						$wp_query->set( 'orderby', 'menu_order' );
+						$wp_query->set( 'order', 'ASC' );
 					}
 				}
 			}
 		}
 	}
 	
-/*
 	// for dev
+/*
 	function hicpo_dev( $query ) {
 		
 		global $args;
 		
-		//print_r($args);
-		//print_r($query);
+		echo '[$args]';
+		echo isset( $args ) ? ' isset ' : ' non-object ';
+		echo '/';
+		echo is_array( $args ) ? ' array ' : ' no-array ';
+		echo '<br>';
+		print_r($args);
+		echo '<br>';
 		
-		$args_post_type = isset( $args['post_type'] ) ? $args['post_type'] : 'non-object';
-		$args_orderby = isset( $args['orderby'] ) ? $args['orderby'] : 'non-object';
-		$args_order = isset( $args['order'] ) ? $args['order'] : 'non-object';
-		echo 'args_post_type: '.$args_post_type.'<br>args_orderby: '.$args_orderby.'<br>args_order: '.$args_order.'<br><br>';
+		echo '[$query->query]';
+		echo isset( $query->query ) ? ' isset ' : ' non-object ';
+		echo '/';
+		echo is_array( $query->query ) ? ' array ' : ' no-array ';
+		echo '<br>';
+		print_r($query->query);
+		echo '<br>';
 		
-		$query_post_type = isset( $query->query['post_type'] ) ? $query->query['post_type'] : 'non-object';
-		$query_orderby = isset( $query->query['orderby'] ) ? $query->query['orderby'] : 'non-object';
-		$query_order = isset( $query->query['order'] ) ? $query->query['order'] : 'non-object';
-		echo 'query_post_type: '.$query_post_type.'<br>query_orderby: '.$query_orderby.'<br>query_order: '.$query_order.'<br><br>';
 	}
 */
-
 }
 ?>

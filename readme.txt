@@ -3,7 +3,7 @@ Contributors: hijiri
 Tags: post order, posts order, order post, order posts, custom post type order
 Requires at least: 3.5.0
 Tested up to: 3.8.1
-Stable tag: 2.0.9
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,14 +29,21 @@ Custom Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Quer
 
 == Changelog ==
 
+= 2.1.0 =
+
+* Fixed bug: Custom Query which uses 'order' or 'orderby' parameters is preferred.
+* It does not depend on the designation manner of arguments( Parameters ).
+  ( $args = 'orderby=&order=' or $args = array( 'orderby' => '', 'order' => '' ) )
+* The trouble which exists in 2.0.7, 2.0.8, 2.0.9 was improved!
+* From 2.0.6 please update in 2.1.0.
+
 = 2.0.9 =
 
 * Performance improvement for Admin.
   Fatal performance problem was improved dramatically.
-* Bug fixed.
-  Attachment objects are not broken.
-  Alert warning on the multisite was solved.
-  First when enabling items, 'menu order' of items are not broken.
+* Fixed bug: Attachment objects are not broken.
+* Fixed bug: Alert warning on the multisite was solved.
+* Fixed bug: First when enabling items, 'menu order' of items are not broken.
 * Custom Query which uses 'order' or 'orderby' parameters is preferred.
 
 = 2.0.8 =
@@ -46,8 +53,7 @@ Custom Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Quer
 
 = 2.0.7 =
 
-* Bug fixed.
-  for WordPress 3.8
+* Fixed bug: for WordPress 3.8
 * Add Swedish Translations.(by Thomas)
 
 = 2.0.6 =
@@ -60,7 +66,7 @@ Custom Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Quer
 
 = 2.0.4 =
 
-* Bug fixed
+* Fixed bug
 
 = 2.0.3 =
 
@@ -68,7 +74,7 @@ Custom Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Quer
 
 = 2.0.2 =
 
-* Bug fixed
+* Fixed bug
 
 = 2.0.0 =
 
@@ -92,7 +98,7 @@ Custom Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Quer
 
 = 1.1.1 =
 
-* Bug fixed
+* Fixed bug
 
 = 1.1.0 =
 
