@@ -106,7 +106,7 @@ class Hicpo
 			$blogids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
 			foreach( $blogids as $blog_id ) {
 				switch_to_blog( $blog_id );
-				hicpo_activation_db();
+				$this->hicpo_activation_db();
 			}
 			switch_to_blog( $curr_blog );
 		} else {
