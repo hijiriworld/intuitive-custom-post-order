@@ -1,17 +1,17 @@
 === Intuitive Custom Post Order ===
 Contributors: hijiri
-Tags: post order, posts order, order post, order posts, custom post type order
+Tags: post order, posts order, order post, order posts, custom post type order, custom taxonomy order
 Requires at least: 3.5.0
-Tested up to: 3.8.1
-Stable tag: 2.1.0
+Tested up to: 4.1.0
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Intuitively, Order Items (Posts, Pages, and Custom Post Types) using a Drag and Drop Sortable JavaScript.
+Intuitively, Order Items (Posts, Pages, and Custom Post Types, and Custom Taxonomies) using a Drag and Drop Sortable JavaScript.
 
 == Description ==
 
-Intuitively, Order Items (Posts, Pages, and Custom Post Types) using a Drag and Drop Sortable JavaScript.
+Intuitively, Order Items (Posts, Pages, and Custom Post Types, and Custom Taxonomies) using a Drag and Drop Sortable JavaScript.
 Configuration is unnecessary.
 You can do directly on default WordPress administration.
 
@@ -28,6 +28,15 @@ Custom Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Quer
 1. Order items
 
 == Changelog ==
+
+= 3.0.0 =
+
+* Support the Custom Taxonomy Order!! 
+  ( wp_list_categories, get_categories, the_terms, the_tags, get_terms, get_the_terms, get_the_term_list, the_category, wp_dropdown_categories, the_taxonomies )
+* Suuport the sorting in admin UI.
+  While having sorted, Drag and Drop Sortable Javascript don't run.
+* Support non public objects( show_ui=true, show_in_menu=true )
+* Add Japanese Translations.
 
 = 2.1.0 =
 
@@ -108,3 +117,9 @@ Custom Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Quer
 = 1.0.0 =
 
 Initial Release
+
+== Upgrade Notice ==
+
+= 2.2.0 =
+
+Expand Database Table: wp_terms.
