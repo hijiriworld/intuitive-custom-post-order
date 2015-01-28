@@ -3,7 +3,7 @@
 Plugin Name: Intuitive Custom Post Order
 Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
 Description: Intuitively, Order Items (Posts, Pages, and Custom Post Types and Custom Taxonomies) using a Drag and Drop Sortable JavaScript.
-Version: 3.0.0
+Version: 3.0.1
 Author: hijiri
 Author URI: http://hijiriworld.com/web/
 License: GPLv2 or later
@@ -25,33 +25,6 @@ load_plugin_textdomain( 'hicpo', false, basename( dirname( __FILE__ ) ).'/lang' 
 	Activation
 
 ***********************************************************************************/
-
-register_activation_hook( __FILE__, 'hicpo_activation' );
-function hicpo_activation()
-{
-	global $wpdb;
-	if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-		$curr_blog = $wpdb->blogid;
-		$blogids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
-		foreach( $blogids as $blog_id ) {
-			switch_to_blog( $blog_id );
-			hicpo_activation_db();
-		}
-		switch_to_blog( $curr_blog );
-	} else {
-		hicpo_activation_db();
-	}
-}
-function hicpo_activation_db()
-{
-	global $wpdb;
-	$query = "SHOW COLUMNS FROM $wpdb->terms LIKE 'term_order'";
-	$result = $wpdb->query($query);
-	if ( $result == 0 ){
-		$query = "ALTER TABLE $wpdb->terms ADD `term_order` INT( 4 ) NULL DEFAULT '0'";
-		$result = $wpdb->query( $query );
-	}
-}
 
 register_uninstall_hook( __FILE__, 'hicpo_uninstall' );
 function hicpo_uninstall()
@@ -92,6 +65,8 @@ class Hicpo
 {
 	function __construct()
 	{	
+		$this->hicpo_activation();
+		
 		//if ( !get_option('hicpo_options') ) $this->hicpo_install();
 		
 		add_action( 'admin_menu', array( $this, 'admin_menu') );
@@ -121,6 +96,32 @@ class Hicpo
 		add_filter( 'wp_get_object_terms', array( $this, 'hicpo_get_object_terms' ), 10, 3 );
 		add_filter( 'get_terms', array( $this, 'hicpo_get_object_terms' ), 10, 3 );
 		//add_filter( 'tag_cloud_sort', array( $this, 'hicpo_get_object_terms' ), 10, 3 );
+	}
+
+	function hicpo_activation()
+	{
+		global $wpdb;
+		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+			$curr_blog = $wpdb->blogid;
+			$blogids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+			foreach( $blogids as $blog_id ) {
+				switch_to_blog( $blog_id );
+				hicpo_activation_db();
+			}
+			switch_to_blog( $curr_blog );
+		} else {
+			$this->hicpo_activation_db();
+		}
+	}
+	function hicpo_activation_db()
+	{
+		global $wpdb;
+		$query = "SHOW COLUMNS FROM $wpdb->terms LIKE 'term_order'";
+		$result = $wpdb->query($query);
+		if ( $result == 0 ){
+			$query = "ALTER TABLE $wpdb->terms ADD `term_order` INT( 4 ) NULL DEFAULT '0'";
+			$result = $wpdb->query( $query );
+		}
 	}
 	
 	function hicpo_install()

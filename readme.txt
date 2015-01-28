@@ -3,7 +3,7 @@ Contributors: hijiri
 Tags: post order, posts order, order post, order posts, custom post type order, custom taxonomy order
 Requires at least: 3.5.0
 Tested up to: 4.1.0
-Stable tag: 3.0.0
+Stable tag: 3.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,6 +28,10 @@ Custom Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Quer
 1. Order items
 
 == Changelog ==
+
+= 3.0.1 =
+
+* Fixed bug
 
 = 3.0.0 =
 
