@@ -133,6 +133,6 @@ Initial Release
 
 == Upgrade Notice ==
 
-= 2.2.0 =
+= 3.0.3 =
 
 Expand Database Table: wp_terms.
