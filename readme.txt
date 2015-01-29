@@ -3,7 +3,7 @@ Contributors: hijiri
 Tags: post order, posts order, order post, order posts, custom post type order, custom taxonomy order
 Requires at least: 3.5.0
 Tested up to: 4.1.0
-Stable tag: 3.0.2
+Stable tag: 3.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,19 +15,28 @@ Intuitively, Order Items (Posts, Pages, and Custom Post Types, and Custom Taxono
 Configuration is unnecessary.
 You can do directly on default WordPress administration.
 
-Custom Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Query()', 'get_posts()', 'query_posts()' )
+Your Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Query()', 'get_posts()', 'query_posts()' )
 
 == Installation ==
 
-1. Upload 'intuitive-custom-post-order' folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. (Optional) Select Sortable Objects from Intuitive CPT Menu
+1. Upload 'intuitive-custom-post-order' folder to the `/wp-content/plugins/` directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Select Sortable Objects from Intuitive CPT Menu.
 
 == Screenshots ==
 
-1. Order items
+1. Reorder post
+2. Reorder taxonomy
+3. Settings
 
 == Changelog ==
+
+= 3.0.3 =
+
+* Performance improvement for Activation.
+* Add Initialize of Custom Taxonomy Order.
+* Fixed bug of refresh method.
+* Overwirting orderby, order improved.(Thanks @newash and @anriettec)
 
 = 3.0.1 & 3.0.2 =
 
