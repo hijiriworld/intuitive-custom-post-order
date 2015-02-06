@@ -3,7 +3,7 @@ Contributors: hijiri
 Tags: post order, posts order, order post, order posts, custom post type order, custom taxonomy order
 Requires at least: 3.5.0
 Tested up to: 4.1.0
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,9 @@ Intuitively, Order Items (Posts, Pages, and Custom Post Types, and Custom Taxono
 Configuration is unnecessary.
 You can do directly on default WordPress administration.
 
-Your Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Query()', 'get_posts()', 'query_posts()' )
+Your Query which uses the 'order' or 'orderby' parameters is preferred.
+In order to prefer the parameters of your query, You must use the 'WP_Query()' or 'query_posts()'.
+Excluded 'get_posts()'.
 
 == Installation ==
 
@@ -31,6 +33,15 @@ Your Query which uses 'order' or 'orderby' parameters is preferred. ( 'WP_Query(
 
 == Changelog ==
 
+= 3.0.4 =
+
+* Your Query which uses the 'order' or 'orderby' parameters is preferred.
+  In order to prefer the parameters of your query, You must use the 'WP_Query()' or 'query_posts()'.
+  Excluded 'get_posts()'.
+* Fixed bug
+  - Decision of Enabling Sortable JavaScript.
+  - Initialize of menu_order of pages.( orderby=post_title, order=asc )
+  
 = 3.0.3 =
 
 * Performance improvement for Activation.

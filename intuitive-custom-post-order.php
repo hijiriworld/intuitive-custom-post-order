@@ -3,7 +3,7 @@
 Plugin Name: Intuitive Custom Post Order
 Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
 Description: Intuitively, Order Items (Posts, Pages, and Custom Post Types and Custom Taxonomies) using a Drag and Drop Sortable JavaScript.
-Version: 3.0.3
+Version: 3.0.4
 Author: hijiri
 Author URI: http://hijiriworld.com/web/
 License: GPLv2 or later
@@ -73,8 +73,7 @@ class Hicpo
 		add_action( 'wp_ajax_update-menu-order-tags', array( $this, 'update_menu_order_tags' ) );
 		
 		// reorder post types
-		add_filter( 'pre_get_posts', array( $this, 'hicpo_filter_active' ) );
-		add_filter( 'pre_get_posts', array( $this, 'hicpo_pre_get_posts' ) );
+		add_action( 'pre_get_posts', array( $this, 'hicpo_pre_get_posts' ) );
 		
 		add_filter( 'get_previous_post_where', array( $this, 'hicpo_previous_post_where' ) );
 		add_filter( 'get_previous_post_sort', array( $this, 'hicpo_previous_post_sort' ) );
@@ -100,7 +99,7 @@ class Hicpo
 
 	function admin_menu()
 	{
-		add_options_page( __( 'Intuitive CPO', 'hicpo' ), __( 'Intuitive CPO', 'hicpo' ), 'manage_options', 'hicpo-settings', array( $this,'admin_page' ));
+		add_options_page( __( 'Intuitive CPO', 'hicpo' ), __( 'Intuitive CPO', 'hicpo' ), 'manage_options', 'hicpo-settings', array( $this,'admin_page' ) );
 	}
 	
 	function admin_page()
@@ -118,20 +117,17 @@ class Hicpo
 		if ( empty( $objects ) && empty( $tags ) ) return false;
 		
 		// exclude (sorting, addnew page, edit page)
-		if ( isset( $_GET['orderby'] ) || strstr( $_SERVER["REQUEST_URI"], 'action=edit' ) || strstr( $_SERVER["REQUEST_URI"], 'wp-admin/post-new.php' ) ) return false;
+		if ( isset( $_GET['orderby'] ) || strstr( $_SERVER['REQUEST_URI'], 'action=edit' ) || strstr( $_SERVER['REQUEST_URI'], 'wp-admin/post-new.php' ) ) return false;
 		
-		// check post_type
 		if ( !empty( $objects ) ) {
-			// if page or custom post types
-			if ( isset( $_GET['post_type'] ) && in_array( $_GET['post_type'], $objects ) ) {
+			if ( isset( $_GET['post_type'] ) && !isset( $_GET['taxonomy'] ) && in_array( $_GET['post_type'], $objects ) ) { // if page or custom post types
 				$active = true;
-			// if post
-			} else if ( strstr( $_SERVER["REQUEST_URI"], 'wp-admin/edit.php' ) && in_array( 'post', $objects ) ) {
+			}
+			if ( !isset( $_GET['post_type'] ) && strstr( $_SERVER['REQUEST_URI'], 'wp-admin/edit.php' ) && in_array( 'post', $objects ) ) { // if post
 				$active = true;
 			}
 		}
 		
-		// check taxonomy
 		if ( !empty( $tags ) ) {
 			if ( isset( $_GET['taxonomy'] ) && in_array( $_GET['taxonomy'], $tags ) ) {
 				$active = true;
@@ -144,21 +140,17 @@ class Hicpo
 	function load_script_css()
 	{
 		if ( $this->_check_load_script_css() ) {
-			
-			// load JavaScript
 			wp_enqueue_script( 'jquery' );
 			wp_enqueue_script( 'jquery-ui-sortable' );
 			wp_enqueue_script( 'hicpojs', HICPO_URL.'/js/hicpo.js', array( 'jquery' ), null, true );
-            
-			// load CSS
+			
 			wp_enqueue_style( 'hicpo', HICPO_URL.'/css/hicpo.css', array(), null );
 		}
 	}
-	
+			
 	function refresh()
 	{
 		global $wpdb;
-		
 		$objects = $this->get_hicpo_options_objects();
 		$tags = $this->get_hicpo_options_tags();
 		
@@ -169,12 +161,7 @@ class Hicpo
 					FROM $wpdb->posts 
 					WHERE post_type = '".$object."' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
 				" );
-				
-				/**
-				* アイテム数が 0、もしくはアイテム数とmaxが同じでminが0以外の場合は、再構築処理をスキップ
-				*/
-				if ( $result[0]->cnt == 0 ) continue;
-				if ( count( $result ) > 0 && $result[0]->cnt == $result[0]->max && $result[0]->min != 0 ) continue;
+				if ( $result[0]->cnt == 0 || $result[0]->cnt == $result[0]->max ) continue;
 				
 				$results = $wpdb->get_results( "
 					SELECT ID 
@@ -182,13 +169,12 @@ class Hicpo
 					WHERE post_type = '".$object."' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future') 
 					ORDER BY menu_order ASC
 				" );
-				// 新規追加した場合 menu_order=0 で登録されるため、常に1からはじまるように振っておく
 				foreach( $results as $key => $result ) {
 					$wpdb->update( $wpdb->posts, array( 'menu_order' => $key+1 ), array( 'ID' => $result->ID ) );
 				}
 			}
 		}
-			
+
 		if ( !empty( $tags ) ) {
 			foreach( $tags as $taxonomy ) {
 				$result = $wpdb->get_results( "
@@ -197,16 +183,14 @@ class Hicpo
 					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id ) 
 					WHERE term_taxonomy.taxonomy = '".$taxonomy."'
 				" );
-				
-				if ( $result[0]->cnt == 0 ) continue;
-				if ( count( $result ) > 0 && $result[0]->max == $result[0]->cnt && $result[0]->min != 0 ) continue;
+				if ( $result[0]->cnt == 0 || $result[0]->cnt == $result[0]->max ) continue;
 				
 				$results = $wpdb->get_results( "
 					SELECT terms.term_id 
 					FROM $wpdb->terms AS terms 
 					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id ) 
 					WHERE term_taxonomy.taxonomy = '".$taxonomy."' 
-					ORDER BY name ASC
+					ORDER BY term_order ASC
 				" );
 				foreach( $results as $key => $result ) {
 					$wpdb->update( $wpdb->terms, array( 'term_order' => $key+1 ), array( 'term_id' => $result->term_id ) );
@@ -281,79 +265,86 @@ class Hicpo
 		}
 	}
 	
+	/**
+	* はじめて有効化されたオブジェクトは、ディフォルトの order に従って menu_order セットする
+	*
+	* post_type: orderby=post_date, order=desc
+	* taxonomy: orderby=name, order=asc
+	* 
+	* 判定は: アイテム数が 0 以上で order 値がひとつもセットされていないオブジェクト
+	*/
+	
 	function update_options()
 	{
 		global $wpdb;
 		
-		if ( isset( $_POST['hicpo_submit'] ) ) {
+		if ( !isset( $_POST['hicpo_submit'] ) ) return false;
 			
-			check_admin_referer( 'nonce_hicpo' );
+		check_admin_referer( 'nonce_hicpo' );
 			
-			$input_options = array();
-			$input_options['objects'] = isset( $_POST['objects'] ) ? $_POST['objects'] : '';
-			$input_options['tags'] = isset( $_POST['tags'] ) ? $_POST['tags'] : '';
-			
-			update_option( 'hicpo_options', $input_options );
-			
-			/**
-			* はじめて有効化されたオブジェクトの場合、ディフォルトの order に従って order 値をセットしておく。
-			* 
-			* post type: orderby=date, order=desc
-			* taxonomy: orderby=name, order=asc
-			*/
-			
-			$objects = $this->get_hicpo_options_objects();
-			$tags = $this->get_hicpo_options_tags();
-			
-			if ( !empty( $objects ) ) {
-				foreach( $objects as $object ) {
-					/**
-					* アイテム数が 0 以上で order 値がセットされていないオブジェクトが対象
-					*/
-					$result = $wpdb->get_results( "
-						SELECT count(*) as cnt, max(menu_order) as max, min(menu_order) as min 
+		$input_options = array();
+		$input_options['objects'] = isset( $_POST['objects'] ) ? $_POST['objects'] : '';
+		$input_options['tags'] = isset( $_POST['tags'] ) ? $_POST['tags'] : '';
+		
+		update_option( 'hicpo_options', $input_options );
+		
+		$objects = $this->get_hicpo_options_objects();
+		$tags = $this->get_hicpo_options_tags();
+		
+		if ( !empty( $objects ) ) {
+			foreach( $objects as $object ) {
+				$result = $wpdb->get_results( "
+					SELECT count(*) as cnt, max(menu_order) as max, min(menu_order) as min 
+					FROM $wpdb->posts 
+					WHERE post_type = '".$object."' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+				" );
+				if ( $result[0]->cnt == 0 || $result[0]->cnt == $result[0]->max ) continue;
+				
+				if ( $object == 'page' ) {
+					$results = $wpdb->get_results( "
+						SELECT ID 
 						FROM $wpdb->posts 
-						WHERE post_type = '".$object."' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+						WHERE post_type = '".$object."' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future') 
+						ORDER BY post_title ASC
 					" );
-					if ( count( $result ) > 0 && $result[0]->max == 0 ) {
-						$results = $wpdb->get_results( "
-							SELECT ID 
-							FROM $wpdb->posts 
-							WHERE post_type = '".$object."' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future') 
-							ORDER BY post_date DESC
-						" );
-						foreach( $results as $key => $result ) {
-							$wpdb->update( $wpdb->posts, array( 'menu_order' => $key+1 ), array( 'ID' => $result->ID ) );
-						}
-					}
+				} else {
+					$results = $wpdb->get_results( "
+						SELECT ID 
+						FROM $wpdb->posts 
+						WHERE post_type = '".$object."' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future') 
+						ORDER BY post_date DESC
+					" );
+				}
+				foreach( $results as $key => $result ) {
+					$wpdb->update( $wpdb->posts, array( 'menu_order' => $key+1 ), array( 'ID' => $result->ID ) );
 				}
 			}
-			
-			if ( !empty( $tags ) ) {
-				foreach( $tags as $taxonomy ) {
-					$result = $wpdb->get_results( "
-						SELECT count(*) as cnt, max(term_order) as max, min(term_order) as min 
-						FROM $wpdb->terms AS terms 
-						INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id ) 
-						WHERE term_taxonomy.taxonomy = '".$taxonomy."'
-					" );
-					if ( count( $result ) > 0 && $result[0]->max == 0 ) {
-						$results = $wpdb->get_results( "
-							SELECT terms.term_id 
-							FROM $wpdb->terms AS terms 
-							INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id ) 
-							WHERE term_taxonomy.taxonomy = '".$taxonomy."' 
-							ORDER BY name ASC
-						" );
-						foreach( $results as $key => $result ) {
-							$wpdb->update( $wpdb->terms, array( 'term_order' => $key+1 ), array( 'term_id' => $result->term_id ) );
-						}
-					}
-				}
-			}
-			
-			wp_redirect( 'admin.php?page=hicpo-settings&msg=update' );
 		}
+		
+		if ( !empty( $tags ) ) {
+			foreach( $tags as $taxonomy ) {
+				$result = $wpdb->get_results( "
+					SELECT count(*) as cnt, max(term_order) as max, min(term_order) as min 
+					FROM $wpdb->terms AS terms 
+					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id ) 
+					WHERE term_taxonomy.taxonomy = '".$taxonomy."'
+				" );
+				if ( $result[0]->cnt == 0 || $result[0]->cnt == $result[0]->max ) continue;
+				
+				$results = $wpdb->get_results( "
+					SELECT terms.term_id 
+					FROM $wpdb->terms AS terms 
+					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id ) 
+					WHERE term_taxonomy.taxonomy = '".$taxonomy."' 
+					ORDER BY name ASC
+				" );
+				foreach( $results as $key => $result ) {
+					$wpdb->update( $wpdb->terms, array( 'term_order' => $key+1 ), array( 'term_id' => $result->term_id ) );
+				}
+			}
+		}
+		
+		wp_redirect( 'admin.php?page=hicpo-settings&msg=update' );
 	}
 	
 	function hicpo_previous_post_where( $where )
@@ -410,33 +401,23 @@ class Hicpo
 		return $orderby;
 	}
 	
-	function hicpo_filter_active( $wp_query )
-	{
-		// get_postsの場合 suppress_filters=true となる為、フィルタリングを有効にする
-		if ( isset($wp_query->query['suppress_filters']) ) $wp_query->query['suppress_filters'] = false;
-		if ( isset($wp_query->query_vars['suppress_filters']) ) $wp_query->query_vars['suppress_filters'] = false;
-		return $wp_query;
-	}
-	
 	function hicpo_pre_get_posts( $wp_query )
 	{
-		global $args;
-		
 		$objects = $this->get_hicpo_options_objects();
-		
-		if ( !is_array( $objects ) ) return false;
+		if ( empty( $objects ) ) return false;
 		
 		/**
 		* for Admin
+		*
+		* @default
+		* post cpt: [order] => null(desc) [orderby] => null(date)
+		* page: [order] => asc [orderby] => menu_order title
+		* 
 		*/
-
-		if ( is_admin() && !defined( 'DOING_AJAX' ) ) {
+		
+		if ( is_admin() ) {
 			
-			/**
-			* adminの場合 post_type=post も渡される
-			* ゆえに $_GET['post_type] での判定はダメ
-			*/
-			
+			// adminの場合 $wp_query->query['post_type']=post も渡される
 			if ( isset( $wp_query->query['post_type'] ) && !isset( $_GET['orderby'] ) ) {
 				if ( in_array( $wp_query->query['post_type'], $objects ) ) {
 					$wp_query->set( 'orderby', 'menu_order' );
@@ -445,61 +426,38 @@ class Hicpo
 			}
 		
 		/**
-		* for Front
+		* for Front End
 		*/
 		
 		} else {
 			
-			/**
-			* $wp_query->query['post_type'] でオブジェクト判別
-			* ディフォルトのクエリの場合 $args が渡ってこないので可能
-			*/
-			
 			$active = false;
-				
-			// post_typeが指定されている場合
 			
+			// page or custom post types
 			if ( isset( $wp_query->query['post_type'] ) ) {
-				// 複数指定の場合は、いずれかひとつでも該当すれば有効とする
-				if ( is_array( $wp_query->query['post_type'] ) ) {
-					$post_types = $wp_query->query['post_type'];
-					foreach( $post_types as $post_type ) {
-						if ( in_array( $post_type, $objects ) ) {
-							$active = true;
-						}
-					}
-				} else {
+				// exclude array()
+				if ( !is_array( $wp_query->query['post_type'] ) ) {
 					if ( in_array( $wp_query->query['post_type'], $objects ) ) {
 						$active = true;
 					}
 				}
-			// post_typeが指定されていなければ post_type=post
-			
+			// post
 			} else {
 				if ( in_array( 'post', $objects ) ) {
 					$active = true;
 				}
 			}
 			
-			/**
-			* $args が存在した場合はそちらを優先する
-			*/
-			
 			if ( !$active ) return false;
 			
-			if ( isset( $args ) ) {
-				// args = Array
-				if ( is_array( $args ) ) {
-					if ( !isset( $args['orderby'] ) ) $wp_query->set( 'orderby', 'menu_order' );
-					if ( !isset( $args['order'] ) ) $wp_query->set( 'order', 'ASC' );
-				// args = String
-				} else {
-					if ( !strstr( $args, 'orderby=' ) ) $wp_query->set( 'orderby', 'menu_order' );
-					if ( !strstr( $args, 'order=' ) ) $wp_query->set( 'order', 'ASC' );
-				}
+			// get_posts()
+			if ( isset( $wp_query->query['suppress_filters'] ) ) {
+				if ( $wp_query->get( 'orderby' ) == 'date' )  $wp_query->set( 'orderby', 'menu_order' );
+				if ( $wp_query->get( 'order' ) == 'DESC' ) $wp_query->set( 'order', 'ASC' );
+			// WP_Query( contain main_query )
 			} else {
-				if ( !$wp_query->get( 'orderby' ) ) $wp_query->set( 'orderby', 'menu_order' );
-				if ( !$wp_query->get( 'order' ) && $wp_query->get( 'orderby' ) == 'menu_order') $wp_query->set( 'order', 'ASC' );;
+				if ( !$wp_query->get( 'orderby' ) )  $wp_query->set( 'orderby', 'menu_order' );
+				if ( !$wp_query->get( 'order' ) ) $wp_query->set( 'order', 'ASC' );
 			}
 		}
 	}
