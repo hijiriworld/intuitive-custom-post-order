@@ -35,7 +35,7 @@ The 'get_posts()' is excluded.
 
 = How to re-override the parameters of 'orderby' and 'order' =
 
-- Sub query -
+Sub query
 
 Use the 'WP_Query', you can re-override the parameters.
 
@@ -46,7 +46,7 @@ Use the 'WP_Query', you can re-override the parameters.
 ) ) ?>
 `
 
-- Main query -
+Main query
 
 Use the 'pre_get_posts' action hook or 'query_posts', you can re-override the parameters.
 
