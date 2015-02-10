@@ -15,9 +15,9 @@ Intuitively, Order Items (Posts, Pages, and Custom Post Types, and Custom Taxono
 Configuration is unnecessary.
 You can do directly on default WordPress administration.
 
-Your Query which uses the 'order' or 'orderby' parameters is preferred.
-In order to prefer the parameters of your query, You must use the 'WP_Query()' or 'query_posts()'.
-Excluded 'get_posts()'.
+You can re-override the parameters of 'orderby' and 'order'.
+In order to re-override the parameters, You must use the 'WP_Query' or 'pre_get_posts' or 'query_posts'.
+The 'get_posts()' is excluded.
 
 == Installation ==
 
@@ -31,7 +31,50 @@ Excluded 'get_posts()'.
 2. Reorder taxonomy
 3. Settings
 
+== Frequently Asked Questions ==
+
+= How to re-override the parameters of 'orderby' and 'order' =
+
+- Sub query -
+
+Use the 'WP_Query', you can re-override the parameters.
+
+`
+<?php $query = new WP_Query( array(
+	'orderby' => 'date',
+	'order' => 'DESC',
+) ) ?>
+`
+
+- Main query -
+
+Use the 'pre_get_posts' action hook or 'query_posts', you can re-override the parameters.
+
+pre_get_posts
+
+`
+function my_filter( $query )
+{
+	if ( is_admin() || !$query->is_main_query() ) return;
+	if ( is_home() ) {
+		$query->set( 'orderby', 'date' );
+		$query->set( 'order', 'DESC' );
+		return;
+	}
+}
+add_action( 'pre_get_posts', 'my_filter' );
+`
+
+query_posts
+
+`
+<?php query_posts( array(
+	'orderby' => 'rand'
+) ); ?>
+`
+
 == Changelog ==
+
 
 = 3.0.4 =
 
