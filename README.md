@@ -1,4 +1,4 @@
-# intuitive-custom-post-order
+# Intuitive Custom Post Oredr
 
 WordPress Plugin: Intuitive Custom Post Order
 
