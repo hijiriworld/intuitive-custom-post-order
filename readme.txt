@@ -19,6 +19,8 @@ You can re-override the parameters of 'orderby' and 'order'.
 In order to re-override the parameters, You must use the 'WP_Query' or 'pre_get_posts' or 'query_posts'.
 The 'get_posts()' is excluded.
 
+<a href="https://github.com/torounit/custom-post-type-permalinks" target="_blank">This Plugin published on GitHub.</a>
+
 == Installation ==
 
 1. Upload 'intuitive-custom-post-order' folder to the `/wp-content/plugins/` directory.
@@ -84,7 +86,7 @@ query_posts
 * Fixed bug
   - Decision of Enabling Sortable JavaScript.
   - Initialize of menu_order of pages.( orderby=post_title, order=asc )
-  
+
 = 3.0.3 =
 
 * Performance improvement for Activation.
@@ -98,7 +100,7 @@ query_posts
 
 = 3.0.0 =
 
-* Support the Custom Taxonomy Order!! 
+* Support the Custom Taxonomy Order!!
   ( wp_list_categories, get_categories, the_terms, the_tags, get_terms, get_the_terms, get_the_term_list, the_category, wp_dropdown_categories, the_taxonomies )
 * Suuport the sorting in admin UI.
   While having sorted, Drag and Drop Sortable Javascript don't run.
