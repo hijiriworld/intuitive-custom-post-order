@@ -19,7 +19,7 @@ You can re-override the parameters of 'orderby' and 'order'.
 In order to re-override the parameters, You must use the 'WP_Query' or 'pre_get_posts' or 'query_posts'.
 The 'get_posts()' is excluded.
 
-<a href="https://github.com/torounit/custom-post-type-permalinks" target="_blank">This Plugin published on GitHub.</a>
+<a href="https://github.com/hijiriworld/intuitive-custom-post-order">This Plugin published on GitHub.</a>
 
 == Installation ==
 
