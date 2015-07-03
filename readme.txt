@@ -11,12 +11,12 @@ Intuitively, order items( Posts, Pages, and Custom Post Types, and Custom Taxono
 
 == Description ==
 
-Intuitively, order items( Posts, Pages, and Custom Post Types, and Custom Taxonomies ) using a drag and drop sortable JavaScript.
-Configuration is unnecessary.
+Intuitively, order items( Posts, Pages, and Custom Post Types, and Custom Taxonomies ) using a drag and drop sortable JavaScript.<br>
+Configuration is unnecessary.<br>
 You can do directly on default WordPress administration.
 
-In addition, You can re-override the parameters of `orderby` and `order`, by using the `WP_Query` or `pre_get_posts` or `query_posts`.
-The `get_posts()` is excluded.
+In addition, You can re-override the parameters of 'orderby' and 'order', by using the 'WP_Query' or 'pre_get_posts' or 'query_posts()'.<br>
+The 'get_posts()' is excluded.
 
 This Plugin published on <a href="https://github.com/hijiriworld/intuitive-custom-post-order">GitHub.</a>
 
