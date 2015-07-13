@@ -3,7 +3,7 @@ Contributors: hijiri
 Tags: post order, posts order, order post, order posts, custom post type order, custom taxonomy order
 Requires at least: 3.5.0
 Tested up to: 4.2.2
-Stable tag: 3.0.4
+Stable tag: 3.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,10 @@ add_action( 'pre_get_posts', 'my_filter' );
 
 == Changelog ==
 
+= 3.0.5 =
+
+* Fixed bug
+  - Initialize of menu_order of pages.( orderby=menu_order, post_title, order=asc )
 
 = 3.0.4 =
 

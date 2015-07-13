@@ -3,7 +3,7 @@
 Plugin Name: Intuitive Custom Post Order
 Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
 Description: Intuitively, Order Items (Posts, Pages, and Custom Post Types and Custom Taxonomies) using a Drag and Drop Sortable JavaScript.
-Version: 3.0.4
+Version: 3.0.5
 Author: hijiri
 Author URI: http://hijiriworld.com/web/
 License: GPLv2 or later
@@ -268,10 +268,11 @@ class Hicpo
 	/**
 	* はじめて有効化されたオブジェクトは、ディフォルトの order に従って menu_order セットする
 	*
-	* post_type: orderby=post_date, order=desc
-	* taxonomy: orderby=name, order=asc
+	* post_type: orderby=post_date, order=DESC
+	* page: orderby=menu_order, post_title, order=ASC
+	* taxonomy: orderby=name, order=ASC
 	* 
-	* 判定は: アイテム数が 0 以上で order 値がひとつもセットされていないオブジェクト
+	* 判定は: アイテム数が 0 以上で menu_order の最大値とアイテム数が同じではないオブジェクト
 	*/
 	
 	function update_options()
@@ -305,7 +306,7 @@ class Hicpo
 						SELECT ID 
 						FROM $wpdb->posts 
 						WHERE post_type = '".$object."' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future') 
-						ORDER BY post_title ASC
+						ORDER BY menu_order, post_title ASC
 					" );
 				} else {
 					$results = $wpdb->get_results( "
