@@ -1,0 +1,44 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2015-01-26 21:02+0900\n"
+"PO-Revision-Date: 2015-01-26 21:05+0900\n"
+"Last-Translator: hijiri <hijiriworld@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-KeywordsList: __;_e\n"
+
+#: intuitive-custom-post-order/intuitive-custom-post-order.php:140
+msgid "Intuitive CPO"
+msgstr "並び替え設定"
+
+#: intuitive-custom-post-order/admin/settings.php:12
+msgid "Intuitive Custom Post Order Settings"
+msgstr "並び替え設定"
+
+#: intuitive-custom-post-order/admin/settings.php:17
+msgid "Settings saved."
+msgstr ""
+
+#: intuitive-custom-post-order/admin/settings.php:31
+msgid "Sortable Post Types"
+msgstr "並び替える投稿タイプ"
+
+#: intuitive-custom-post-order/admin/settings.php:53
+msgid "All Check"
+msgstr "すべて選択"
+
+#: intuitive-custom-post-order/admin/settings.php:60
+msgid "Sortable Taxonomies"
+msgstr "並び替えるカスタム分類"
+
+#: intuitive-custom-post-order/admin/settings.php:62
+msgid "Custom Taxonomies Order becomes always effective."
+msgstr "カスタム分類は常に並び替えが有効になります。"
+
+#: intuitive-custom-post-order/admin/settings.php:71
+msgid "Update"
+msgstr ""
