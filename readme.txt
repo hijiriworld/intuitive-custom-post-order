@@ -81,8 +81,8 @@ add_action( 'pre_get_posts', 'my_filter' );
 
 = 3.0.6 =
 
-* Support 'next_post_link()' and 'previous_post_link().
-　- Parameters( $in_same_term, $excluded_terms, $taxonomy ) works perfectly.
+* Support 'next_post_link()' and 'previous_post_link(), etc.
+  - Parameters( $in_same_term, $excluded_terms, $taxonomy ) works perfectly.
 
 = 3.0.5 =
 
