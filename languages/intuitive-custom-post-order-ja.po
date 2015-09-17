@@ -1,0 +1,42 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2015-09-17 21:12+0900\n"
+"PO-Revision-Date: 2015-09-17 21:14+0900\n"
+"Last-Translator: hijiri <hijiriworld@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-KeywordsList: __;_e;_x;_ex;_n;_nx;_n_noop;_nx_noop;"
+"translate_nooped_plural\n"
+
+#: intuitive-custom-post-order/intuitive-custom-post-order.php:104
+msgid "Intuitive CPO"
+msgstr "並び替え設定"
+
+#: intuitive-custom-post-order/admin/settings.php:13
+msgid "Intuitive Custom Post Order Settings"
+msgstr "並び替え設定"
+
+#: intuitive-custom-post-order/admin/settings.php:18
+msgid "Settings saved."
+msgstr ""
+
+#: intuitive-custom-post-order/admin/settings.php:32
+msgid "Sortable Post Types"
+msgstr "カスタム投稿タイプ"
+
+#: intuitive-custom-post-order/admin/settings.php:54
+#: intuitive-custom-post-order/admin/settings.php:82
+msgid "All Check"
+msgstr "すべて選択"
+
+#: intuitive-custom-post-order/admin/settings.php:61
+msgid "Sortable Taxonomies"
+msgstr "カスタムタクソノミー"
+
+#: intuitive-custom-post-order/admin/settings.php:85
+msgid "Update"
+msgstr ""

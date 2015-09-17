@@ -1,13 +1,15 @@
 <?php
 /*
-Plugin Name: Intuitive Custom Post Order
-Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
-Description: Intuitively, Order Items (Posts, Pages, and Custom Post Types and Custom Taxonomies) using a Drag and Drop Sortable JavaScript.
-Version: 3.0.6
-Author: hijiri
-Author URI: http://hijiriworld.com/web/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * Plugin Name: Intuitive Custom Post Order
+ * Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
+ * Description: Intuitively, Order Items (Posts, Pages, and Custom Post Types and Custom Taxonomies) using a Drag and Drop Sortable JavaScript.
+ * Version: 3.0.7
+ * Author: hijiri
+ * Author URI: http://hijiriworld.com/web/
+ * Text Domain: intuitive-custom-post-order
+ * Domain Path: /languages
+ * License: GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 /**
@@ -16,7 +18,6 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 define( 'HICPO_URL', plugins_url( '', __FILE__ ) );
 define( 'HICPO_DIR', plugin_dir_path( __FILE__ ) );
-load_plugin_textdomain( 'hicpo', false, basename( dirname( __FILE__ ) ).'/lang' );
 
 /**
 * Uninstall hook
@@ -61,10 +62,11 @@ class Hicpo
 	{
 		if ( !get_option( 'hicpo_activation' ) ) $this->hicpo_activation();
 		
+		add_action( 'plugins_loaded', array( $this, 'my_plugin_load_plugin_textdomain' ) );
+
 		add_action( 'admin_menu', array( $this, 'admin_menu') );
 		
 		add_action( 'admin_init', array( $this, 'refresh' ) );
-		
 		add_action( 'admin_init', array( $this, 'update_options') );
 		add_action( 'admin_init', array( $this, 'load_script_css' ) );
 		
@@ -97,9 +99,13 @@ class Hicpo
 		update_option( 'hicpo_activation', 1 );
 	}
 
+	function my_plugin_load_plugin_textdomain()
+	{
+		load_plugin_textdomain( 'intuitive-custom-post-order', false, basename( dirname( __FILE__ ) ).'/languages/' );
+	}
 	function admin_menu()
 	{
-		add_options_page( __( 'Intuitive CPO', 'hicpo' ), __( 'Intuitive CPO', 'hicpo' ), 'manage_options', 'hicpo-settings', array( $this,'admin_page' ) );
+		add_options_page( __( 'Intuitive CPO', 'intuitive-custom-post-order' ), __( 'Intuitive CPO', 'intuitive-custom-post-order' ), 'manage_options', 'hicpo-settings', array( $this,'admin_page' ) );
 	}
 	
 	function admin_page()

@@ -10,7 +10,7 @@ $hicpo_tags = isset( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : array()
 
 <?php screen_icon( 'plugins' ); ?>
 
-<h2><?php _e( 'Intuitive Custom Post Order Settings', 'hicpo' ); ?></h2>
+<h2><?php _e( 'Intuitive Custom Post Order Settings', 'intuitive-custom-post-order' ); ?></h2>
 
 <?php if ( isset($_GET['msg'] )) : ?>
 <div id="message" class="updated below-h2">
@@ -29,7 +29,7 @@ $hicpo_tags = isset( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : array()
 <table class="form-table">
 	<tbody>
 		<tr valign="top">
-			<th scope="row"><?php _e( 'Sortable Post Types', 'hicpo' ) ?></th>
+			<th scope="row"><?php _e( 'Sortable Post Types', 'intuitive-custom-post-order' ) ?></th>
 			<td>
 			<?php
 				$post_types = get_post_types( array (
@@ -51,14 +51,14 @@ $hicpo_tags = isset( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : array()
 
 </div>
 
-<label><input type="checkbox" id="hicpo_allcheck_objects"> <?php _e( 'All Check', 'hicpo' ) ?></label>
+<label><input type="checkbox" id="hicpo_allcheck_objects"> <?php _e( 'All Check', 'intuitive-custom-post-order' ) ?></label>
 
 <div id="hicpo_select_tags">
 
 <table class="form-table">
 	<tbody>
 		<tr valign="top">
-			<th scope="row"><?php _e( 'Sortable Taxonomies', 'hicpo' ) ?></th>
+			<th scope="row"><?php _e( 'Sortable Taxonomies', 'intuitive-custom-post-order' ) ?></th>
 			<td>
 			<?php
 				$taxonomies = get_taxonomies( array(
@@ -79,10 +79,10 @@ $hicpo_tags = isset( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : array()
 
 </div>
 
-<label><input type="checkbox" id="hicpo_allcheck_tags"> <?php _e( 'All Check', 'hicpo' ) ?></label>
+<label><input type="checkbox" id="hicpo_allcheck_tags"> <?php _e( 'All Check', 'intuitive-custom-post-order' ) ?></label>
 
 <p class="submit">
-	<input type="submit" class="button-primary" name="hicpo_submit" value="<?php _e( 'Update', 'cptg' ); ?>">
+	<input type="submit" class="button-primary" name="hicpo_submit" value="<?php _e( 'Update' ); ?>">
 </p>
 	
 </form>

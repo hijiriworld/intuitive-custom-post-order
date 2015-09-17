@@ -3,8 +3,8 @@ Contributors: hijiri
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TT5NP352P6MCU
 Tags: post order, posts order, order post, order posts, custom post type order, custom taxonomy order
 Requires at least: 3.5.0
-Tested up to: 4.2.3
-Stable tag: 3.0.6
+Tested up to: 4.3.1
+Stable tag: 3.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,10 @@ add_action( 'pre_get_posts', 'my_filter' );
 `
 
 == Changelog ==
+
+= 3.0.7 =
+
+* This plugin will imported listed above into the translate.wordpress.org translation system. Language packs will also be enabled for this plugin, for any locales that are fully translated (at 100%).
 
 = 3.0.6 =
 
