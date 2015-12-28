@@ -46,14 +46,42 @@
 	});
 	//$("#the-list").disableSelection();
 	
-	// this will add static widths to the header cells, 
-	// to avoid shifting width on drag when using custom columns
 	$(document).ready(function(){
-		$('.wp-list-table thead th, .wp-list-table thead td')
+
+		// this will add static widths to the header cells, 
+		// to avoid shifting width on drag when using custom columns
+		var hicpoFixHeaders = function(){
+			$('.wp-list-table thead th, .wp-list-table thead td')
 			.each(function(){
 				$(this).css('width', $(this).width());
 			});
-	});
 
+			console.log('headers');
+		}; 
+		// load on startup
+		hicpoFixHeaders();
+
+
+		var hicpoResetHeaders = function(){
+			// this will reset headers and body cells
+			$('.wp-list-table thead th, .wp-list-table thead td')
+			.each(function(){
+				$(this).css('width', '');
+			});
+			$('.wp-list-table tbody th, .wp-list-table tbody td')
+			.each(function(){
+				$(this).css('width', '');
+			});
+			console.log('headers');
+		}; 
+
+		// reset on window resize 
+		$( window ).resize(function() {
+			console.log('resize');
+			hicpoResetHeaders();
+		  hicpoFixHeaders();
+		});
+
+	});
 
 })(jQuery)
