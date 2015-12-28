@@ -55,8 +55,6 @@
 			.each(function(){
 				$(this).css('width', $(this).width());
 			});
-
-			console.log('headers');
 		}; 
 		// load on startup
 		hicpoFixHeaders();
@@ -72,12 +70,10 @@
 			.each(function(){
 				$(this).css('width', '');
 			});
-			console.log('headers');
 		}; 
 
 		// reset on window resize 
 		$( window ).resize(function() {
-			console.log('resize');
 			hicpoResetHeaders();
 		  hicpoFixHeaders();
 		});
