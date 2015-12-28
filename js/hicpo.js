@@ -28,7 +28,6 @@
 			});
 		}
 	});
-	//$("#the-list").disableSelection();
 	
 	// tags
 	
@@ -44,8 +43,8 @@
 			});
 		}
 	});
-	//$("#the-list").disableSelection();
-	
+
+	// run after dom has loaded	
 	$(document).ready(function(){
 
 		var hicpoFixHeaders = function(){
@@ -58,7 +57,6 @@
 		}; 
 		// load on startup
 		hicpoFixHeaders();
-
 
 		var hicpoResetHeaders = function(){
 			// this will reset headers and body cells
@@ -75,9 +73,8 @@
 		// reset on window resize 
 		$( window ).resize(function() {
 			hicpoResetHeaders();
-		  hicpoFixHeaders();
+			hicpoFixHeaders();
 		});
-
 	});
 
 })(jQuery)
