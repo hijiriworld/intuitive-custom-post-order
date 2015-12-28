@@ -48,9 +48,9 @@
 	
 	$(document).ready(function(){
 
+		var hicpoFixHeaders = function(){
 		// this will add static widths to the header cells, 
 		// to avoid shifting width on drag when using custom columns
-		var hicpoFixHeaders = function(){
 			$('.wp-list-table thead th, .wp-list-table thead td')
 			.each(function(){
 				$(this).css('width', $(this).width());
