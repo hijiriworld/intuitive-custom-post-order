@@ -76,6 +76,9 @@ add_action( 'pre_get_posts', 'my_filter' );
 	'orderby' => 'rand'
 ) ); ?>
 `
+= How to move post of second page in top of first page. =
+
+Go to "screen options" and change "Number of items per page:".
 
 == Changelog ==
 
