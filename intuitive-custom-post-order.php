@@ -448,6 +448,14 @@ class Hicpo
 						$active = true;
 					}
 				}
+			// taxonomy archive
+			} elseif ( $wp_query->is_tax ) {
+				$query_obj = $wp_query->get_queried_object();
+				$taxonomy_obj = get_taxonomy( $query_obj->taxonomy );
+				$post_types = $taxonomy_obj->object_type;
+				if ( count( array_intersect( $objects, $post_types ) ) > 0 ) {
+					$active = true;
+				}
 			// post
 			} else {
 				if ( in_array( 'post', $objects ) ) {
