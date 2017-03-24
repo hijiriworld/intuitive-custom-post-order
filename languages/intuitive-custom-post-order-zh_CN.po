@@ -1,0 +1,43 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2015-10-08 22:44+0800\n"
+"PO-Revision-Date: 2015-10-08 22:45+0800\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.4\n"
+"X-Poedit-KeywordsList: __;_e;_x;_ex;_n;_nx;_n_noop;_nx_noop;translate_nooped_plural\n"
+"Last-Translator: Mike <48353088@qq.com>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_CN\n"
+
+#: intuitive-custom-post-order/intuitive-custom-post-order.php:104
+msgid "Intuitive CPO"
+msgstr "文章自定义排序 设置"
+
+#: intuitive-custom-post-order/admin/settings.php:13
+msgid "Intuitive Custom Post Order Settings"
+msgstr "文章自定义排序 设置"
+
+#: intuitive-custom-post-order/admin/settings.php:18
+msgid "Settings saved."
+msgstr ""
+
+#: intuitive-custom-post-order/admin/settings.php:32
+msgid "Sortable Post Types"
+msgstr "文章与页面 排序开关"
+
+#: intuitive-custom-post-order/admin/settings.php:54
+#: intuitive-custom-post-order/admin/settings.php:82
+msgid "All Check"
+msgstr "全选"
+
+#: intuitive-custom-post-order/admin/settings.php:61
+msgid "Sortable Taxonomies"
+msgstr "分类与标签 排序开关"
+
+#: intuitive-custom-post-order/admin/settings.php:85
+msgid "Update"
+msgstr ""
