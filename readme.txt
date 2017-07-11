@@ -4,15 +4,15 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: post order, posts order, order post, order posts, custom post type order, custom taxonomy order
 Requires at least: 3.5.0
 Tested up to: 4.7.3
-Stable tag: 3.0.8
+Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Intuitively, order items( Posts, Pages, and Custom Post Types, and Custom Taxonomies ) using a drag and drop sortable JavaScript.
+Intuitively, order items( Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
 
 == Description ==
 
-Intuitively, order items( Posts, Pages, and Custom Post Types, and Custom Taxonomies ) using a drag and drop sortable JavaScript.
+Intuitively, order items( Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
 
 Select sortable items from 'Intuitive CPT' menu of Setting menu in WordPress.
 
@@ -41,7 +41,7 @@ This Plugin published on <a href="https://github.com/hijiriworld/intuitive-custo
 
 By using the 'WP_Query', you can re-override the parameters.
 
-* WP_Query
+WP_Query
 
 `
 <?php $query = new WP_Query( array(
@@ -50,7 +50,7 @@ By using the 'WP_Query', you can re-override the parameters.
 ) ) ?>
 `
 
-* get_posts()
+get_posts()
 
 `
 <?php $query = get_posts( array(
@@ -71,7 +71,7 @@ ATTENTION: Only if you use 'get_posts()' to re-overwrite to the default order( o
 
 By using the 'pre_get_posts' action hook or 'query_posts()', you can re-override the parameters.
 
-* pre_get_posts
+pre_get_posts
 
 `
 function my_filter( $query )
@@ -86,7 +86,7 @@ function my_filter( $query )
 add_action( 'pre_get_posts', 'my_filter' );
 `
 
-* query_posts()
+query_posts()
 
 `
 <?php query_posts( array(
@@ -98,6 +98,11 @@ add_action( 'pre_get_posts', 'my_filter' );
 Go to "screen options" and change "Number of items per page:".
 
 == Changelog ==
+
+= 3.1.0 =
+
+* Support the Sites.
+* Improved Activation.
 
 = 3.0.8 =
 

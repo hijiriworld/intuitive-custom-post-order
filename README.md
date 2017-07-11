@@ -4,7 +4,7 @@
 
 ## Description
 
-Intuitively, order items( Posts, Pages, and Custom Post Types, and Custom Taxonomies ) using a drag and drop sortable JavaScript.
+Intuitively, order items( Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
 
 Select sortable items from 'Intuitive CPT' menu of Setting menu in WordPress.
 
