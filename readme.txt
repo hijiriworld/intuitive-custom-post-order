@@ -29,9 +29,11 @@ This Plugin published on <a href="https://github.com/hijiriworld/intuitive-custo
 
 == Screenshots ==
 
-1. Reorder post
-2. Reorder taxonomy
-3. Settings
+1. Settings
+2. Reorder Posts
+3. Reorder Taxonomies
+4. ( for Multisite ) Network Settings
+5. ( for Multisite ) Reorder Sites
 
 == Frequently Asked Questions ==
 
