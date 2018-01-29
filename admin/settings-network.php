@@ -1,7 +1,5 @@
 <div class="wrap">
 
-<?php screen_icon( 'plugins' ); ?>
-
 <h2><?php _e( 'Intuitive Custom Post Order Network Settings', 'intuitive-custom-post-order' ); ?></h2>
 
 <?php if ( isset($_GET['msg'] )) : ?>

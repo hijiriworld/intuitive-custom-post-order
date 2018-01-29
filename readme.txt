@@ -3,8 +3,8 @@ Contributors: hijiri
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TT5NP352P6MCU
 Tags: post order, posts order, order post, order posts, custom post type order, custom taxonomy order
 Requires at least: 3.5.0
-Tested up to: 4.7.3
-Stable tag: 3.1.0
+Tested up to: 4.9.2
+Stable tag: 3.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,6 +100,10 @@ query_posts()
 Go to "screen options" and change "Number of items per page:".
 
 == Changelog ==
+
+= 3.1.1 =
+
+* Remove deprecated function 'secreen_icon()'.
 
 = 3.1.0 =
 
