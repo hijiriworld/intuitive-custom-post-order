@@ -8,8 +8,6 @@ $hicpo_tags = isset( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : array()
 
 <div class="wrap">
 
-<?php screen_icon( 'plugins' ); ?>
-
 <h2><?php _e( 'Intuitive Custom Post Order Settings', 'intuitive-custom-post-order' ); ?></h2>
 
 <?php if ( isset($_GET['msg'] )) : ?>
