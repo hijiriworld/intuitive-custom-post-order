@@ -1,16 +1,25 @@
 {
-    "name": "intuitive-custom-post-order/intuitive-custom-post-order",
+    "name": "nazcahawk-intuitive-custom-post-order/nazcahawk-intuitive-custom-post-order",
     "version": "3.1.1",
     "type": "wordpress-plugin",
     "description": "Fork of hijiriworld/intuitive-custom-post-order",
     "keywords": [
         "hijiriworld",
-        "intuitive-custom-post-order"
+        "intuitive-custom-post-order",
+        "nazcahawk",
+        "fork"
     ],
     "homepage": "https://github.com/nazcahawk/intuitive-custom-post-order",
     "license": "MIT",
     "authors": [
-        "hijiriworld"
+        {
+            "name": "hijiriworld",
+            "role": "Creator"
+        },
+        {
+            "name": "nazcahawk",
+            "role": "Did the fork"
+        }
     ],
     "require": {
         "php": ">=5.3.0",

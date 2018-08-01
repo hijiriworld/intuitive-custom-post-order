@@ -10,6 +10,14 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Intuitively, order items( Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
 
+== Fork Changes ==
+
+Fully rewrites the hicpo.js file fixing the annoying visual effect when dragging items.
+
+Here is a quick comparison of the both versions:
+* Original: https://media.giphy.com/media/9DyWeUTPj8tJVAYP7S/giphy.gif
+* Fork: https://media.giphy.com/media/1eEDVzeEPCneshPPaT/giphy.gif
+
 == Description ==
 
 Intuitively, order items( Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.

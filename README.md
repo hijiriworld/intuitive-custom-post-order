@@ -1,5 +1,21 @@
 # Intuitive Custom Post Order
 
+## Updates Over Original Version
+
+Fully rewrites the hicpo.js file fixing the annoying visual effect when dragging items.
+
+Also, makes the code easier to extenda and maintain.
+
+## Comparison
+
+### Original
+![ICPO Original](https://media.giphy.com/media/9DyWeUTPj8tJVAYP7S/giphy.gif)
+
+### Fork
+![ICPO Fork](https://media.giphy.com/media/1eEDVzeEPCneshPPaT/giphy.gif)
+
+## -- Original Readme
+
 <a href="http://hijiriworld.com/web/plugins/intuitive-custom-post-order/">Intuitive Custom Post Order</a> is WordPress Plugin that order items using a drag and drop sortable JavaScript.
 
 ## Description
