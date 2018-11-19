@@ -32,7 +32,7 @@ $hicpo_tags = isset( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : array()
 			<?php
 				$post_types = get_post_types( array (
 					'show_ui' => true,
-					'show_in_menu' => true,
+					//'show_in_menu' => true, // Quoted: allow to display post types not in menu such as ACF groups
 				), 'objects' );
 				
 				foreach ( $post_types  as $post_type ) {
