@@ -1,8 +1,30 @@
-.ui-sortable tr:hover {
+.ui-sortable .drag-handle {
+	display: none;
+	width: 26px;
+	height: 16px;
+	margin-left: 3px;
+	padding: 5px 0;
+}
+.ui-sortable tr:hover .drag-handle {
+	display: block;
+}
+.ui-sortable .drag-handle:hover {
 	cursor: move;
 }
+.ui-sortable .drag-handle svg {
+	display: block;
+	width: 100%;
+	height: 100%;
+	fill: #333;
+}
+@media screen and (max-width: 782px) {
+	.ui-sortable .drag-handle {
+		display: block;
+		margin-left: 7px;
+	}
+}
 .ui-sortable tr.alternate {
-	background-color: #F9F9F9;	
+	background-color: #F9F9F9;
 }
 .ui-sortable tr.ui-sortable-helper {
 	background-color: #F9F9F9;
