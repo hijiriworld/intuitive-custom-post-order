@@ -9,7 +9,7 @@
         "nazcahawk",
         "fork"
     ],
-    "homepage": "https://github.com/nazcahawk/intuitive-custom-post-order",
+    "homepage": "https://github.com/adribelo/intuitive-custom-post-order",
     "license": "MIT",
     "authors": [
         {
@@ -17,7 +17,7 @@
             "role": "Creator"
         },
         {
-            "name": "nazcahawk",
+            "name": "adribelo",
             "role": "Did the fork"
         }
     ],
