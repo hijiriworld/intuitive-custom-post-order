@@ -1,3 +1,5 @@
+# Moved to [gitlab](https://gitlab.com/wp-dev-tools/intuitive-custom-post-order)
+
 # Intuitive Custom Post Order
 
 ## Updates Over Original Version
