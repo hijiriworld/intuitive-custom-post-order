@@ -8,3 +8,6 @@
 	background-color: #F9F9F9;
 	border-top: 1px solid #DFDFDF;
 }
+.ui-sortable-placeholder {
+	display: none;
+}

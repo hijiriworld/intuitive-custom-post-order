@@ -3,7 +3,7 @@
  * Plugin Name: Intuitive Custom Post Order
  * Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
  * Description: Intuitively, Order Items( Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites ) using a Drag and Drop Sortable JavaScript.
- * Version: 3.1.1
+ * Version: 3.1.2
  * Author: hijiri
  * Author URI: http://hijiriworld.com/web/
  * Text Domain: intuitive-custom-post-order
@@ -18,7 +18,7 @@
 
 define( 'HICPO_URL', plugins_url( '', __FILE__ ) );
 define( 'HICPO_DIR', plugin_dir_path( __FILE__ ) );
-define( 'HICPO_VER', '3.1.1' );
+define( 'HICPO_VER', '3.1.2' );
 
 /**
 * Uninstall hook
