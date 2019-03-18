@@ -8,7 +8,7 @@ Stable tag: 3.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Intuitively, order items( Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
+Intuitively, order items( Posts, Pages, Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
 
 == Description ==
 
