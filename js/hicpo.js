@@ -1,11 +1,17 @@
 (function($){
-	
+
+	// Add a 'drag' icon to the table rows
+	$('table.posts #the-list, table.pages #the-list, table.tags #the-list, table.sites #the-list')
+		.find('tr .check-column')
+		.append('<div class="drag-handle"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><path d="M32 2l18 18H36v24h14L32 62 14 44h14V20H14L32 2z"/></svg></div>');
+
 	// posts
 
 	$('table.posts #the-list, table.pages #the-list').sortable({
 		'items': 'tr',
 		'axis': 'y',
 		'helper': fixHelper,
+		'handle': '.drag-handle',
 		'update' : function(e, ui) {
 			$.post( ajaxurl, {
 				action: 'update-menu-order',
@@ -14,13 +20,14 @@
 		}
 	});
 	//$("#the-list").disableSelection();
-	
+
 	// tags
-	
+
 	$('table.tags #the-list').sortable({
 		'items': 'tr',
 		'axis': 'y',
 		'helper': fixHelper,
+		'handle': '.drag-handle',
 		'update' : function(e, ui) {
 			$.post( ajaxurl, {
 				action: 'update-menu-order-tags',
@@ -29,9 +36,9 @@
 		}
 	});
 	//$("#the-list").disableSelection();
-	
+
 	// sites
-	
+
 	// add number
 	var site_table_tr = $('table.sites #the-list tr');
 	site_table_tr.each( function() {
@@ -50,11 +57,12 @@
 		}
 		$(this).attr('id','site-'+ret);
 	} );
-	
+
 	$('table.sites #the-list').sortable({
 		'items': 'tr',
 		'axis': 'y',
 		'helper': fixHelper,
+		'handle': '.drag-handle',
 		'update' : function(e, ui) {
 			$.post( ajaxurl, {
 				action: 'update-menu-order-sites',
@@ -62,12 +70,12 @@
 			});
 		}
 	});
-	
+
 	var fixHelper = function(e, ui) {
 		ui.children().children().each(function() {
 			$(this).width($(this).width());
 		});
 		return ui;
 	};
-	
+
 })(jQuery)
