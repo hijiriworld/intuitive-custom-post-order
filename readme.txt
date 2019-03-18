@@ -12,7 +12,7 @@ Intuitively, order items( Posts, Pages, ,Custom Post Types, Custom Taxonomies, S
 
 == Description ==
 
-Intuitively, order items( Posts, Pages, Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
+Intuitively, order items( Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
 
 Select sortable items from 'Intuitive CPO' menu of Setting menu in WordPress.
 
