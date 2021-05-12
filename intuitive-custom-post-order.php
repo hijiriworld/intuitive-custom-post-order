@@ -3,7 +3,7 @@
  * Plugin Name: Intuitive Custom Post Order
  * Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
  * Description: Intuitively, Order Items( Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites ) using a Drag and Drop Sortable JavaScript.
- * Version: 3.1.2
+ * Version: 3.1.3
  * Author: hijiri
  * Author URI: http://hijiriworld.com/web/
  * Text Domain: intuitive-custom-post-order
@@ -18,7 +18,7 @@
 
 define( 'HICPO_URL', plugins_url( '', __FILE__ ) );
 define( 'HICPO_DIR', plugin_dir_path( __FILE__ ) );
-define( 'HICPO_VER', '3.1.2' );
+define( 'HICPO_VER', '3.1.3' );
 
 /**
 * Uninstall hook
@@ -372,6 +372,35 @@ class Hicpo
 				$wpdb->update( $wpdb->posts, array( 'menu_order' => $menu_order_arr[$position] ), array( 'ID' => intval( $id ) ) );
 			}
 		}
+
+		// same number check
+		$post_type = get_post_type($id);
+		$sql = "SELECT COUNT(menu_order) AS mo_count, post_type, menu_order FROM $wpdb->posts
+				 WHERE post_type = '{$post_type}' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+				 AND menu_order > 0 GROUP BY post_type, menu_order HAVING (mo_count) > 1";
+		$results = $wpdb->get_results( $sql );
+		if(count($results) > 0) {
+			// menu_order refresh
+			$sql = "SELECT ID, menu_order FROM $wpdb->posts
+			 WHERE post_type = '{$post_type}' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+			 AND menu_order > 0 ORDER BY menu_order";
+			$results = $wpdb->get_results( $sql );
+			foreach( $results as $key => $result ) {
+				$view_posi = array_search($result->ID, $id_arr, true);
+				if( $view_posi === false) {
+					$view_posi = 999;
+				}
+				$sort_key = ($result->menu_order * 1000) + $view_posi;
+				$sort_ids[$sort_key] = $result->ID;
+			}
+			ksort($sort_ids);
+			$oreder_no = 0;
+			foreach( $sort_ids as $key => $id ) {
+				$oreder_no = $oreder_no + 1;
+				$wpdb->update( $wpdb->posts, array( 'menu_order' => $oreder_no ), array( 'ID' => intval( $id ) ) );
+			}
+		}
+
 	}
 	
 	function update_menu_order_tags()
@@ -403,6 +432,39 @@ class Hicpo
 				$wpdb->update( $wpdb->terms, array( 'term_order' => $menu_order_arr[$position] ), array( 'term_id' => intval( $id ) ) );
 			}
 		}
+
+		// same number check
+		$term = get_term($id);
+		$taxonomy = $term->taxonomy;
+		$sql = "SELECT COUNT(term_order) AS to_count, term_order 
+			FROM $wpdb->terms AS terms 
+			INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id ) 
+			WHERE term_taxonomy.taxonomy = '".$taxonomy."'GROUP BY taxonomy, term_order HAVING (to_count) > 1";
+		$results = $wpdb->get_results( $sql );
+		if(count($results) > 0) {
+			// term_order refresh
+			$sql = "SELECT terms.term_id, term_order
+			FROM $wpdb->terms AS terms 
+			INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id ) 
+			WHERE term_taxonomy.taxonomy = '".$taxonomy."' 
+			ORDER BY term_order ASC";
+			$results = $wpdb->get_results( $sql );
+			foreach( $results as $key => $result ) {
+				$view_posi = array_search($result->term_id, $id_arr, true);
+				if( $view_posi === false) {
+					$view_posi = 999;
+				}
+				$sort_key = ($result->term_order * 1000) + $view_posi;
+				$sort_ids[$sort_key] = $result->term_id;
+			}
+			ksort($sort_ids);
+			$oreder_no = 0;
+			foreach( $sort_ids as $key => $id ) {
+				$oreder_no = $oreder_no + 1;
+				$wpdb->update( $wpdb->terms, array( 'term_order' => $oreder_no ), array( 'term_id' => $id ) );
+			}
+		}
+
 	}
 	
 	function update_menu_order_sites()
