@@ -4,7 +4,7 @@
 
 ## Description
 
-Intuitively, order items( Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
+Intuitively, order items( Posts, Pages, Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
 
 Select sortable items from 'Intuitive CPO' menu of Setting menu in WordPress.
 
@@ -15,7 +15,7 @@ ATTENTION: Only if you use `get_posts()` to re-overwrite to the default order( `
 
 1. Upload 'intuitive-custom-post-order' folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Select sortable items from 'Intuitive CPO' menu of Setting menu in WordPress.
+3. Select sortable items from 'Intuitive CPT' menu of Setting menu in WordPress.
 
 ## Documentation
 
