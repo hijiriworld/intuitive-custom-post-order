@@ -898,5 +898,3 @@ class Hicpo
 	}
 	
 }
-
-?>
