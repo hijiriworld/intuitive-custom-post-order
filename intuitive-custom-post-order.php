@@ -198,7 +198,11 @@ class Hicpo
 		global $pagenow, $typenow;
 		
 		$active = false;
-		
+
+		if ( ! current_user_can( 'edit_posts' ) || ! current_user_can( 'manage_categories' ) || ! current_user_can( 'manage_sites' ) ) {
+			return false;
+		}
+
 		// multisite > sites
 		if (
 			function_exists( 'is_multisite' )
@@ -346,6 +350,10 @@ class Hicpo
 			return;
 		}
 
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return;
+		}
+
 		global $wpdb;
 
 		parse_str( $_POST['order'], $data );
@@ -414,6 +422,10 @@ class Hicpo
 			return;
 		}
 
+		if ( ! current_user_can( 'manage_categories' ) ) {
+			return;
+		}
+
 		global $wpdb;
 		
 		parse_str( $_POST['order'], $data );
@@ -479,6 +491,10 @@ class Hicpo
 	function update_menu_order_sites()
 	{
 		if ( ! wp_verify_nonce( $_POST['nonce'], 'hicpojs-ajax-nonce' ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_sites' ) ) {
 			return;
 		}
 
