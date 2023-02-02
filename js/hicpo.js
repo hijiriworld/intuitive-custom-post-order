@@ -9,6 +9,7 @@
 		'update' : function(e, ui) {
 			$.post( ajaxurl, {
 				action: 'update-menu-order',
+				nonce: hicpojs_ajax_vars.nonce,
 				order: $('#the-list').sortable('serialize'),
 			});
 		}
@@ -24,6 +25,7 @@
 		'update' : function(e, ui) {
 			$.post( ajaxurl, {
 				action: 'update-menu-order-tags',
+				nonce: hicpojs_ajax_vars.nonce,
 				order: $('#the-list').sortable('serialize'),
 			});
 		}
@@ -58,6 +60,7 @@
 		'update' : function(e, ui) {
 			$.post( ajaxurl, {
 				action: 'update-menu-order-sites',
+				nonce: hicpojs_ajax_vars.nonce,
 				order: $('#the-list').sortable('serialize'),
 			});
 		}

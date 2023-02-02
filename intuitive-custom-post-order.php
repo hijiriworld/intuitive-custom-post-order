@@ -198,7 +198,11 @@ class Hicpo
 		global $pagenow, $typenow;
 		
 		$active = false;
-		
+
+		if ( ! current_user_can( 'edit_posts' ) || ! current_user_can( 'manage_categories' ) || ! current_user_can( 'manage_sites' ) ) {
+			return false;
+		}
+
 		// multisite > sites
 		if (
 			function_exists( 'is_multisite' )
@@ -242,7 +246,8 @@ class Hicpo
 			wp_enqueue_script( 'jquery' );
 			wp_enqueue_script( 'jquery-ui-sortable' );
 			wp_enqueue_script( 'hicpojs', HICPO_URL.'/js/hicpo.js', array( 'jquery' ), null, true );
-			
+			wp_localize_script( 'hicpojs', 'hicpojs_ajax_vars', array( 'nonce' => wp_create_nonce( 'hicpojs-ajax-nonce' ) ) );
+
 			wp_enqueue_style( 'hicpo', HICPO_URL.'/css/hicpo.css', array(), null );
 		}
 	}
@@ -341,6 +346,14 @@ class Hicpo
 	
 	function update_menu_order()
 	{
+		if ( ! wp_verify_nonce( $_POST['nonce'], 'hicpojs-ajax-nonce' ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return;
+		}
+
 		global $wpdb;
 
 		parse_str( $_POST['order'], $data );
@@ -405,6 +418,14 @@ class Hicpo
 	
 	function update_menu_order_tags()
 	{
+		if ( ! wp_verify_nonce( $_POST['nonce'], 'hicpojs-ajax-nonce' ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_categories' ) ) {
+			return;
+		}
+
 		global $wpdb;
 		
 		parse_str( $_POST['order'], $data );
@@ -469,6 +490,14 @@ class Hicpo
 	
 	function update_menu_order_sites()
 	{
+		if ( ! wp_verify_nonce( $_POST['nonce'], 'hicpojs-ajax-nonce' ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_sites' ) ) {
+			return;
+		}
+
 		global $wpdb;
 		
 		parse_str( $_POST['order'], $data );
