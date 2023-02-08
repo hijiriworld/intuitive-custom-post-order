@@ -93,6 +93,7 @@ class Hicpo
 		if ( empty($_GET) ) {
 			add_action( 'admin_init', array( $this, 'refresh' ) );
 		}
+		add_action( 'admin_init', array( $this, 'hicpo_add_capabilities') );
 		add_action( 'admin_init', array( $this, 'update_options') );
 		add_action( 'admin_init', array( $this, 'load_script_css' ) );
 
@@ -199,7 +200,7 @@ class Hicpo
 
 		$active = false;
 
-		if ( ! current_user_can( 'edit_posts' ) || ! current_user_can( 'manage_categories' ) || ! current_user_can( 'manage_sites' ) ) {
+		if ( ! current_user_can( 'hicpo_load_script_css' ) ) {
 			return false;
 		}
 
@@ -350,7 +351,7 @@ class Hicpo
 			return;
 		}
 
-		if ( ! current_user_can( 'edit_posts' ) ) {
+		if ( ! current_user_can( 'hicpo_update_menu_order' ) ) {
 			return;
 		}
 
@@ -422,7 +423,7 @@ class Hicpo
 			return;
 		}
 
-		if ( ! current_user_can( 'manage_categories' ) ) {
+		if ( ! current_user_can( 'hicpo_update_menu_order' ) ) {
 			return;
 		}
 
@@ -494,7 +495,7 @@ class Hicpo
 			return;
 		}
 
-		if ( ! current_user_can( 'manage_sites' ) ) {
+		if ( ! current_user_can( 'hicpo_update_menu_order_sites' ) ) {
 			return;
 		}
 
@@ -927,6 +928,20 @@ class Hicpo
 		$hicpo_options = get_option( 'hicpo_options' ) ? get_option( 'hicpo_options' ) : array();
 		$tags = isset( $hicpo_options['tags'] ) && is_array( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : array();
 		return $tags;
+	}
+
+	function hicpo_add_capabilities()
+	{
+		$administrator = get_role( 'administrator' );
+		$administrator->add_cap( 'hicpo_load_script_css' );
+		$administrator->add_cap( 'hicpo_update_menu_order' );
+		$administrator->add_cap( 'hicpo_update_menu_order_tags' );
+		$administrator->add_cap( 'hicpo_update_menu_order_sites' );
+
+		$editor = get_role( 'editor' );
+		$editor->add_cap( 'hicpo_load_script_css' );
+		$editor->add_cap( 'hicpo_update_menu_order' );
+		$editor->add_cap( 'hicpo_update_menu_order_tags' );
 	}
 
 }
