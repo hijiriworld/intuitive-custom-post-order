@@ -105,7 +105,7 @@ class Hicpo
 
 		add_filter( 'get_previous_post_where', array( $this, 'hicpo_previous_post_where' ) );
 		add_filter( 'get_previous_post_sort', array( $this, 'hicpo_previous_post_sort' ) );
-		add_filter( 'get_next_post_where', array( $this, 'hocpo_next_post_where' ) );
+		add_filter( 'get_next_post_where', array( $this, 'hicpo_next_post_where' ) );
 		add_filter( 'get_next_post_sort', array( $this, 'hicpo_next_post_sort' ) );
 
 		// reorder taxonomies
@@ -661,7 +661,7 @@ class Hicpo
 		return $orderby;
 	}
 
-	function hocpo_next_post_where( $where )
+	function hicpo_next_post_where( $where )
 	{
 		global $post;
 
