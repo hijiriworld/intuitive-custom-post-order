@@ -72,7 +72,7 @@ function hicpo_uninstall_db_blogs()
 
 $hicpo = new Hicpo();
 
-class Hicpo 
+class Hicpo
 {
 	/**
 	* Construct
@@ -82,44 +82,44 @@ class Hicpo
 		// activation
 		$hicpo_ver = get_option( 'hicpo_ver' );
 		if ( version_compare( $hicpo_ver, HICPO_VER ) < 0 ) $this->hicpo_activation();
-		
+
 		// textdomain
 		add_action( 'plugins_loaded', array( $this, 'my_plugin_load_plugin_textdomain' ) );
 
 		// add menu
 		add_action( 'admin_menu', array( $this, 'admin_menu') );
-		
+
 		// admin init
 		if ( empty($_GET) ) {
 			add_action( 'admin_init', array( $this, 'refresh' ) );
 		}
 		add_action( 'admin_init', array( $this, 'update_options') );
 		add_action( 'admin_init', array( $this, 'load_script_css' ) );
-		
+
 		// sortable ajax action
 		add_action( 'wp_ajax_update-menu-order', array( $this, 'update_menu_order' ) );
 		add_action( 'wp_ajax_update-menu-order-tags', array( $this, 'update_menu_order_tags' ) );
-		
+
 		// reorder post types
 		add_action( 'pre_get_posts', array( $this, 'hicpo_pre_get_posts' ) );
-		
+
 		add_filter( 'get_previous_post_where', array( $this, 'hicpo_previous_post_where' ) );
 		add_filter( 'get_previous_post_sort', array( $this, 'hicpo_previous_post_sort' ) );
 		add_filter( 'get_next_post_where', array( $this, 'hocpo_next_post_where' ) );
 		add_filter( 'get_next_post_sort', array( $this, 'hicpo_next_post_sort' ) );
-		
+
 		// reorder taxonomies
 		add_filter( 'get_terms_orderby', array( $this, 'hicpo_get_terms_orderby' ), 10, 3 );
 		add_filter( 'wp_get_object_terms', array( $this, 'hicpo_get_object_terms' ), 10, 3 );
 		add_filter( 'get_terms', array( $this, 'hicpo_get_object_terms' ), 10, 3 );
-				
+
 		// reorder sites
 		if ( function_exists( 'is_multisite' ) && is_multisite() )
 		{
 			add_action( 'network_admin_menu', array( $this, 'network_admin_menu' ) );
 			add_action( 'admin_init', array( $this, 'update_network_options' ) );
 			add_action( 'wp_ajax_update-menu-order-sites', array( $this, 'update_menu_order_sites' ) );
-			
+
 			// networkadmin サイト削除時はサイト並び替え除外
 			if( empty( $_SERVER['QUERY_STRING'] ) ||
 				(
@@ -172,34 +172,34 @@ class Hicpo
 	{
 		load_plugin_textdomain( 'intuitive-custom-post-order', false, basename( dirname( __FILE__ ) ).'/languages/' );
 	}
-	
+
 	function admin_menu()
 	{
 		add_options_page( __( 'Intuitive CPO', 'intuitive-custom-post-order' ), __( 'Intuitive CPO', 'intuitive-custom-post-order' ), 'manage_options', 'hicpo-settings', array( $this,'admin_page' ) );
 	}
-	
+
 	function admin_page()
 	{
 		require HICPO_DIR.'admin/settings.php';
 	}
-	
+
 	function network_admin_menu()
 	{
 		add_submenu_page( 'settings.php', __( 'Intuitive CPO', 'hicpo' ), __( 'Intuitive CPO', 'hicpo' ), 'manage_options', 'hicpo-network-settings', array( $this, 'network_admin_page' ) );
 	}
-	
+
 	function network_admin_page()
 	{
 		require HICPO_DIR.'admin/settings-network.php';
 	}
-	
+
 	function _check_load_script_css()
 	{
 		global $pagenow, $typenow;
-		
+
 		$active = false;
 
-		if ( ! current_user_can( 'edit_posts' ) || ! current_user_can( 'manage_categories' ) || ! current_user_can( 'manage_sites' ) ) {
+		if ( ! current_user_can( 'edit_posts' ) ) {
 			return false;
 		}
 
