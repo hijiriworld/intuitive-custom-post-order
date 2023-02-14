@@ -103,7 +103,7 @@ Go to "screen options" and change "Number of items per page:".
 
 = 3.1.4 =
 
-* fixed current security issues. (Thank you timohubois.)
+* fixed current security issues. (Thank you @timohubois)
   Arbitrary Menu Order Update via CSRF.
   Subscriber+ Arbitrary Menu Order Update.
 
