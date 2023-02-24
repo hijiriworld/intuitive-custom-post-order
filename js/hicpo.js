@@ -1,4 +1,4 @@
-/* global ajaxurl, hicpojs_ajax_vars */
+/* global jQuery, ajaxurl, hicpojs_ajax_vars */
 
 ( function ( $ ) {
 	const fixHelper = function ( e, ui ) {
