@@ -79,4 +79,9 @@
 
     <!-- I18n sniffs. -->
     <rule ref="WordPress.Utils.I18nTextDomainFixer"/>
+
+    <!-- Exclude InvalidClassFileName for main plugin file -->
+    <rule ref="WordPress.Files.FileName.InvalidClassFileName">
+        <exclude-pattern>intuitive-custom-post-order.php</exclude-pattern>
+    </rule>
 </ruleset>
