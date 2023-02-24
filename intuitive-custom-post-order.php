@@ -73,7 +73,7 @@ class Hicpo {
 	/**
 	* Construct
 	*/
-	function __construct() {
+	public function __construct() {
 		// activation
 		$hicpo_ver = get_option( 'hicpo_ver' );
 		if ( version_compare( $hicpo_ver, HICPO_VER ) < 0 ) {
@@ -143,7 +143,7 @@ class Hicpo {
 	/**
 	* Method
 	*/
-	function hicpo_activation() {
+	public function hicpo_activation() {
 		global $wpdb;
 
 		// add term_order COLUMN to $wpdb->terms TABLE
@@ -164,27 +164,27 @@ class Hicpo {
 		update_option( 'hicpo_ver', HICPO_VER );
 	}
 
-	function my_plugin_load_plugin_textdomain() {
+	public function my_plugin_load_plugin_textdomain() {
 		load_plugin_textdomain( 'intuitive-custom-post-order', false, basename( dirname( __FILE__ ) ) . '/languages/' );
 	}
 
-	function admin_menu() {
+	public function admin_menu() {
 		 add_options_page( __( 'Intuitive CPO', 'intuitive-custom-post-order' ), __( 'Intuitive CPO', 'intuitive-custom-post-order' ), 'manage_options', 'hicpo-settings', [ $this, 'admin_page' ] );
 	}
 
-	function admin_page() {
+	public function admin_page() {
 		 require HICPO_DIR . 'admin/settings.php';
 	}
 
-	function network_admin_menu() {
+	public function network_admin_menu() {
 		 add_submenu_page( 'settings.php', __( 'Intuitive CPO', 'hicpo' ), __( 'Intuitive CPO', 'hicpo' ), 'manage_options', 'hicpo-network-settings', [ $this, 'network_admin_page' ] );
 	}
 
-	function network_admin_page() {
+	public function network_admin_page() {
 		 require HICPO_DIR . 'admin/settings-network.php';
 	}
 
-	function _check_load_script_css() {
+	public function _check_load_script_css() {
 		 global $pagenow, $typenow;
 
 		$active = false;
@@ -233,7 +233,7 @@ class Hicpo {
 		return $active;
 	}
 
-	function load_script_css() {
+	public function load_script_css() {
 		if ( $this->_check_load_script_css() ) {
 			wp_enqueue_script( 'jquery' );
 			wp_enqueue_script( 'jquery-ui-sortable' );
@@ -244,7 +244,7 @@ class Hicpo {
 		}
 	}
 
-	function refresh() {
+	public function refresh() {
 		global $wpdb;
 		$objects = $this->get_hicpo_options_objects();
 		$tags = $this->get_hicpo_options_tags();
@@ -306,14 +306,14 @@ class Hicpo {
 		}
 	}
 
-	function refresh_network() {
+	public function refresh_network() {
 		global $pagenow;
 		if ( 'sites.php' === $pagenow && ! isset( $_GET['orderby'] ) ) {
 			add_filter( 'query', [ $this, 'refresh_network_2' ] );
 		}
 	}
 
-	function refresh_network_2( $query ) {
+	public function refresh_network_2( $query ) {
 		global $wpdb, $wp_version, $blog_id;
 
 		/**
@@ -346,7 +346,7 @@ class Hicpo {
 		return $query;
 	}
 
-	function update_menu_order() {
+	public function update_menu_order() {
 		if ( ! wp_verify_nonce( $_POST['nonce'], 'hicpojs-ajax-nonce' ) ) {
 			return;
 		}
@@ -419,7 +419,7 @@ class Hicpo {
 
 	}
 
-	function update_menu_order_tags() {
+	public function update_menu_order_tags() {
 		if ( ! wp_verify_nonce( $_POST['nonce'], 'hicpojs-ajax-nonce' ) ) {
 			return;
 		}
@@ -492,7 +492,7 @@ class Hicpo {
 
 	}
 
-	function update_menu_order_sites() {
+	public function update_menu_order_sites() {
 		if ( ! wp_verify_nonce( $_POST['nonce'], 'hicpojs-ajax-nonce' ) ) {
 			return;
 		}
@@ -533,7 +533,7 @@ class Hicpo {
 	* 判定は: アイテム数が 0 以上で menu_order の最大値とアイテム数が同じではないオブジェクト
 	*/
 
-	function update_options() {
+	public function update_options() {
 		 global $wpdb;
 
 		if ( ! isset( $_POST['hicpo_submit'] ) ) {
@@ -621,7 +621,7 @@ class Hicpo {
 		wp_redirect( 'admin.php?page=hicpo-settings&msg=update' );
 	}
 
-	function update_network_options() {
+	public function update_network_options() {
 		 global $wpdb;
 
 		if ( ! isset( $_POST['hicpo_network_submit'] ) ) {
@@ -659,7 +659,7 @@ class Hicpo {
 		wp_redirect( 'settings.php?page=hicpo-network-settings&msg=update' );
 	}
 
-	function hicpo_previous_post_where( $where ) {
+	public function hicpo_previous_post_where( $where ) {
 		global $post;
 
 		$objects = $this->get_hicpo_options_objects();
@@ -674,7 +674,7 @@ class Hicpo {
 		return $where;
 	}
 
-	function hicpo_previous_post_sort( $orderby ) {
+	public function hicpo_previous_post_sort( $orderby ) {
 		 global $post;
 
 		$objects = $this->get_hicpo_options_objects();
@@ -688,7 +688,7 @@ class Hicpo {
 		return $orderby;
 	}
 
-	function hicpo_next_post_where( $where ) {
+	public function hicpo_next_post_where( $where ) {
 		global $post;
 
 		$objects = $this->get_hicpo_options_objects();
@@ -703,7 +703,7 @@ class Hicpo {
 		return $where;
 	}
 
-	function hicpo_next_post_sort( $orderby ) {
+	public function hicpo_next_post_sort( $orderby ) {
 		 global $post;
 
 		$objects = $this->get_hicpo_options_objects();
@@ -717,7 +717,7 @@ class Hicpo {
 		return $orderby;
 	}
 
-	function hicpo_pre_get_posts( $wp_query ) {
+	public function hicpo_pre_get_posts( $wp_query ) {
 		 $objects = $this->get_hicpo_options_objects();
 		if ( empty( $objects ) ) {
 			return false;
@@ -787,7 +787,7 @@ class Hicpo {
 		}
 	}
 
-	function hicpo_get_terms_orderby( $orderby, $args ) {
+	public function hicpo_get_terms_orderby( $orderby, $args ) {
 		if ( is_admin() ) {
 			return $orderby;
 		}
@@ -807,7 +807,7 @@ class Hicpo {
 		return $orderby;
 	}
 
-	function hicpo_get_object_terms( $terms ) {
+	public function hicpo_get_object_terms( $terms ) {
 		 $tags = $this->get_hicpo_options_tags();
 
 		if ( is_admin() && isset( $_GET['orderby'] ) ) {
@@ -829,14 +829,14 @@ class Hicpo {
 		return $terms;
 	}
 
-	function taxcmp( $a, $b ) {
+	public function taxcmp( $a, $b ) {
 		if ( $a->term_order == $b->term_order ) {
 			return 0;
 		}
 		return ( $a->term_order < $b->term_order ) ? -1 : 1;
 	}
 
-	function hicpo_sites_clauses( $pieces = [] ) {
+	public function hicpo_sites_clauses( $pieces = [] ) {
 		global $blog_id;
 
 		if ( is_admin() ) {
@@ -866,7 +866,7 @@ class Hicpo {
 		return $pieces;
 	}
 
-	function hicpo_get_blogs_of_user( $blogs ) {
+	public function hicpo_get_blogs_of_user( $blogs ) {
 		global $blog_id;
 		if ( 1 != $blog_id ) {
 			$current = $blog_id;
@@ -930,7 +930,7 @@ class Hicpo {
 	}
 
 	/* before wp v4.6.0 */
-	function refresh_front_network() {
+	public function refresh_front_network() {
 		global $wp_version;
 		if ( version_compare( $wp_version, '4.6.0' ) < 0 ) {
 			global $blog_id;
@@ -950,7 +950,7 @@ class Hicpo {
 			add_filter( 'query', [ $this, 'refresh_front_network_2' ] );
 		}
 	}
-	function refresh_front_network_2( $query ) {
+	public function refresh_front_network_2( $query ) {
 		global $wpdb;
 		if ( false !== strpos( $query, "SELECT  blog_id FROM $wpdb->blogs    ORDER BY blog_id ASC" ) ) {
 			$query = str_replace( 'ORDER BY blog_id ASC', '', $query );
@@ -969,18 +969,18 @@ class Hicpo {
 		return $query;
 	}
 
-	function get_hicpo_options_objects() {
+	public function get_hicpo_options_objects() {
 		$hicpo_options = get_option( 'hicpo_options' ) ? get_option( 'hicpo_options' ) : [];
 		$objects = isset( $hicpo_options['objects'] ) && is_array( $hicpo_options['objects'] ) ? $hicpo_options['objects'] : [];
 		return $objects;
 	}
-	function get_hicpo_options_tags() {
+	public function get_hicpo_options_tags() {
 		$hicpo_options = get_option( 'hicpo_options' ) ? get_option( 'hicpo_options' ) : [];
 		$tags = isset( $hicpo_options['tags'] ) && is_array( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : [];
 		return $tags;
 	}
 
-	function hicpo_add_capabilities() {
+	public function hicpo_add_capabilities() {
 		$administrator = get_role( 'administrator' );
 		$administrator->add_cap( 'hicpo_load_script_css' );
 		$administrator->add_cap( 'hicpo_update_menu_order' );
