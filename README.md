@@ -17,6 +17,21 @@ ATTENTION: Only if you use `get_posts()` to re-overwrite to the default order( `
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Select sortable items from 'Intuitive CPO' menu of Setting menu in WordPress.
 
+## Local development, coding standards and linting
+
+To use the plugin coding standards and linting navigate to the **plugin folder** and run the following commands in terminal:
+
+```
+composer install
+npm i
+```
+
+After the installation is complete you can process linting with this command:
+
+```
+npm run lint
+```
+
 ## Documentation
 
 * <a href="http://hijiriworld.com/web/plugins/intuitive-custom-post-order/">Plugin URI</a>

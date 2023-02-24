@@ -1,0 +1,25 @@
+{
+	"name": "hijiriworld/intuitive-custom-post-order",
+	"type": "library",
+	"authors": [
+		{
+			"name": "Timo Hubois",
+			"email": "t.hubois@pixelsaft.de"
+		}
+	],
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"require-dev": {
+		"wp-coding-standards/wpcs": "^2.3",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"phpcompatibility/phpcompatibility-wp": "^2.1"
+	},
+	"scripts": {
+		"php:lint": "vendor/bin/phpcs --standard=phpcs.xml .",
+		"php:lint:fix": "vendor/bin/phpcbf --standard=phpcs.xml ."
+	}
+}
