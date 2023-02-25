@@ -43,6 +43,14 @@ After the installation is complete you can process linting with this command:
 npm run lint
 ```
 
+### Plugin Zip
+
+When you are ready you can create a zip file, which excludes not necessary files with this command:
+
+```
+npm run plugin-zip
+```
+
 ## Documentation
 
 * <a href="http://hijiriworld.com/web/plugins/intuitive-custom-post-order/">Plugin URI</a>
