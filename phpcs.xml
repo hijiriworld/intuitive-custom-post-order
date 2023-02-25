@@ -36,7 +36,7 @@
     <rule ref="PHPCompatibilityWP"/>
 
     <!-- Check for WordPress cross-version compatibility. -->
-    <config name="minimum_supported_wp_version" value="5"/>
+    <config name="minimum_supported_wp_version" value="3.5"/>
 
     <!-- Let's check that everything is properly documented. -->
     <!-- <rule ref="WordPress-Docs"/> -->
