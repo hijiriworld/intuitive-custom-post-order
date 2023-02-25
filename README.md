@@ -17,7 +17,16 @@ ATTENTION: Only if you use `get_posts()` to re-overwrite to the default order( `
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Select sortable items from 'Intuitive CPO' menu of Setting menu in WordPress.
 
-## Local development, coding standards and linting
+## Local development
+
+To ensure following WordPress coding standards [@wordpress/scripts](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-scripts/) is used for linting. Currently the CSS and JavaScript parts are not heavy so that there is no bundle process implemented, yet.
+
+### Dependencies
+
+* [Node](https://nodejs.org/en/) >= 14
+* [Composer](https://getcomposer.org/download/) >= 2.0
+
+### Installation
 
 To use the plugin coding standards and linting navigate to the **plugin folder** and run the following commands in terminal:
 
@@ -25,6 +34,8 @@ To use the plugin coding standards and linting navigate to the **plugin folder**
 composer install
 npm i
 ```
+
+### Lint
 
 After the installation is complete you can process linting with this command:
 
