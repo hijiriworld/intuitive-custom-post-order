@@ -1,6 +1,6 @@
 {
 	"name": "intuitive-custom-post-order",
-	"version": "3.1.3",
+	"version": "3.1.4",
 	"description": "Intuitively order items (Posts, Pages, Custom Post Types, Custom Taxonomies, etc.) using drag and drop.",
 	"author": "Timo Hubois <t.hubois@pixelsaft.de>",
 	"license": "GPL-2.0-or-later",
@@ -16,7 +16,8 @@
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^25.4.0",
-		"npm-run-all": "^4.1.5"
+		"npm-run-all": "^4.1.5",
+		"replace-in-files-cli": "^2.0.0"
 	},
 	"scripts": {
 		"format": "wp-scripts format",
@@ -32,5 +33,8 @@
 		"lint:php:fix": "./vendor/bin/phpcbf",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip && mkdir -p tmp && cp -r css tmp/ && cp -r js tmp/ && cd tmp && zip -r ../intuitive-custom-post-order.zip ./* && cd .. && rm -rf tmp && zip -d intuitive-custom-post-order.zip README.md",
+		"pre-release": "npm version patch --git-tag-version false && run-p --silent pre-release:*",
+		"pre-release:plugin-file": "replace-in-files --regex='(\\*\\s*Version:\\s)(\\d+\\.\\d+\\.\\d+)' --replacement=\"* Version: $npm_package_version\" $npm_package_name.php",
+		"pre-release:readme": "replace-in-files --regex='(Stable tag:\\s)(\\d+\\.\\d+\\.\\d+)' --replacement=\"Stable tag: $npm_package_version\" readme.txt"
 	}
 }
