@@ -115,7 +115,7 @@ class Hicpo
 		add_filter( 'get_terms', array( $this, 'hicpo_get_object_terms' ), 10, 3 );
 
 		// reorder sites
-		if ( function_exists( 'is_multisite' ) && is_multisite() )
+		if ( function_exists( 'is_multisite' ) && is_multisite() && is_plugin_active_for_network('intuitive-custom-post-order/intuitive-custom-post-order.php') )
 		{
 			add_action( 'network_admin_menu', array( $this, 'network_admin_menu' ) );
 			add_action( 'admin_init', array( $this, 'update_network_options' ) );
@@ -823,10 +823,9 @@ class Hicpo
 	{
 		global $blog_id;
 		if ( 1 != $blog_id ) {
-			$current = $blog_id;
 			switch_to_blog(1);
 			$hicpo_network_sites = get_option( 'hicpo_network_sites' );
-			switch_to_blog($current);
+			restore_current_blog();
 			if ( !$hicpo_network_sites ) return $blogs;
 		} else {
 			if ( !get_option( 'hicpo_network_sites' ) ) return $blogs;
