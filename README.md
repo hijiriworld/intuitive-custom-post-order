@@ -1,15 +1,16 @@
 # Intuitive Custom Post Order
 
-<a href="http://hijiriworld.com/web/plugins/intuitive-custom-post-order/">Intuitive Custom Post Order</a> is WordPress Plugin that order items using a drag and drop sortable JavaScript.
+Intuitive Custom Post Order is WordPress Plugin that order items using a drag and drop sortable JavaScript.
 
 ## Description
 
-Intuitively, order items( Posts, Pages, Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
+Intuitively, order items (Posts, Pages, Custom Post Types, Custom Taxonomies, Sites) using a drag and drop sortable JavaScript.
 
 Select sortable items from 'Intuitive CPO' menu of Setting menu in WordPress.
 
-In addition, You can re-override the parameters of `orderby` and `order`, by using the `WP_Query` or `pre_get_posts` or `query_posts()` or `get_posts()`.<br>
-ATTENTION: Only if you use `get_posts()` to re-overwrite to the default order( `orderby=date, order=DESC` ), You need to use own custom parameter `orderby=default_date`.
+In addition, You can re-override the parameters of `orderby` and `order`, by using the `WP_Query` or `pre_get_posts` or `query_posts()` or `get_posts()`.
+
+**Attention**: Only if you use `get_posts()` to re-overwrite to the default order (`orderby=date, order=DESC`), You need to use own custom parameter `orderby=default_date`.
 
 ## Installation
 
@@ -30,7 +31,7 @@ To ensure following WordPress coding standards [@wordpress/scripts](https://deve
 
 To use the plugin coding standards and linting navigate to the **plugin folder** and run the following commands in terminal:
 
-```
+```Shell
 composer install
 npm i
 ```
@@ -39,22 +40,21 @@ npm i
 
 After the installation is complete you can process linting with this command:
 
-```
+```Shell
 npm run lint
 ```
 
-### Plugin Zip
+### Create a zip file
 
 When you are ready you can create a zip file, which excludes not necessary files with this command:
 
-```
+```Shell
 npm run plugin-zip
 ```
 
 ## Documentation
 
-* <a href="http://hijiriworld.com/web/plugins/intuitive-custom-post-order/">Plugin URI</a>
-* <a href="https://wordpress.org/plugins/intuitive-custom-post-order/">WordPress Plugin Directory URI</a>
+* [WordPress Plugin Directory](https://wordpress.org/plugins/intuitive-custom-post-order/)
 
 ## License
 
