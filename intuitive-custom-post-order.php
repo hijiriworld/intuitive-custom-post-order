@@ -266,7 +266,7 @@ class Hicpo
 					FROM $wpdb->posts
 					WHERE post_type = '".$object."' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
 				" );
-				if ( $result[0]->cnt == 0 || $result[0]->cnt == $result[0]->max ) continue;
+				if ( !isset($result[0]) || $result[0]->cnt == 0 || $result[0]->cnt == $result[0]->max ) continue;
 
 				$results = $wpdb->get_results( "
 					SELECT ID
@@ -288,7 +288,7 @@ class Hicpo
 					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
 					WHERE term_taxonomy.taxonomy = '".$taxonomy."'
 				" );
-				if ( $result[0]->cnt == 0 || $result[0]->cnt == $result[0]->max ) continue;
+				if ( !isset($result[0]) || $result[0]->cnt == 0 || $result[0]->cnt == $result[0]->max ) continue;
 
 				$results = $wpdb->get_results( "
 					SELECT terms.term_id
