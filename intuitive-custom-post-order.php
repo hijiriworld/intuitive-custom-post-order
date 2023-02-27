@@ -3,7 +3,7 @@
  * Plugin Name: Intuitive Custom Post Order
  * Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
  * Description: Intuitively, Order Items (Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites) using a Drag and Drop Sortable JavaScript.
- * Version: 3.1.4
+ * Version: 3.1.4.1
  * Author: hijiri
  * Author URI: http://hijiriworld.com/web/
  * Text Domain: intuitive-custom-post-order
@@ -1062,14 +1062,18 @@ class Hicpo {
 
 	public function hicpo_add_capabilities() {
 		$administrator = get_role( 'administrator' );
-		$administrator->add_cap( 'hicpo_load_script_css' );
-		$administrator->add_cap( 'hicpo_update_menu_order' );
-		$administrator->add_cap( 'hicpo_update_menu_order_tags' );
-		$administrator->add_cap( 'hicpo_update_menu_order_sites' );
+		if ( $administrator ) {
+			$administrator->add_cap( 'hicpo_load_script_css' );
+			$administrator->add_cap( 'hicpo_update_menu_order' );
+			$administrator->add_cap( 'hicpo_update_menu_order_tags' );
+			$administrator->add_cap( 'hicpo_update_menu_order_sites' );
+		}
 
 		$editor = get_role( 'editor' );
-		$editor->add_cap( 'hicpo_load_script_css' );
-		$editor->add_cap( 'hicpo_update_menu_order' );
-		$editor->add_cap( 'hicpo_update_menu_order_tags' );
+		if ( $editor ) {
+			$editor->add_cap( 'hicpo_load_script_css' );
+			$editor->add_cap( 'hicpo_update_menu_order' );
+			$editor->add_cap( 'hicpo_update_menu_order_tags' );
+		}
 	}
 }
