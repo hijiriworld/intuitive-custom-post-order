@@ -34,7 +34,7 @@
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip && mkdir -p tmp && cp -r css tmp/ && cp -r js tmp/ && cd tmp && zip -r ../intuitive-custom-post-order.zip ./* && cd .. && rm -rf tmp && zip -d intuitive-custom-post-order.zip README.md",
 		"pre-release": "npm version patch --git-tag-version false && run-p --silent pre-release:*",
-		"pre-release:plugin-file": "replace-in-files --regex='(\\*\\s*Version:\\s)(\\d+\\.\\d+\\.\\d+)' --replacement=\"* Version: $npm_package_version\" $npm_package_name.php",
-		"pre-release:readme": "replace-in-files --regex='(Stable tag:\\s)(\\d+\\.\\d+\\.\\d+)' --replacement=\"Stable tag: $npm_package_version\" readme.txt"
+		"pre-release:plugin-file": "replace-in-files --regex='(\\*\\s*Version:\\s)(\\d+(\\.\\d{1,3}){1,3})' --replacement=\"* Version: $npm_package_version\" $npm_package_name.php",
+		"pre-release:readme": "replace-in-files --regex='(Stable tag:\\s)(\\d+(\\.\\d{1,3}){1,3})' --replacement=\"Stable tag: $npm_package_version\" readme.txt"
 	}
 }
