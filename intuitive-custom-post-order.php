@@ -947,7 +947,6 @@ class Hicpo
 			$editor->add_cap( 'hicpo_update_menu_order_tags' );
 		}
 	}
-	}
 
 }
 
