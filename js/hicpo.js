@@ -3,6 +3,7 @@
 	// posts
 
 	$('table.posts #the-list, table.pages #the-list').sortable({
+		'distance': 16,
 		'items': 'tr',
 		'axis': 'y',
 		'helper': fixHelper,
@@ -19,6 +20,7 @@
 	// tags
 	
 	$('table.tags #the-list').sortable({
+		'distance': 16,
 		'items': 'tr',
 		'axis': 'y',
 		'helper': fixHelper,
