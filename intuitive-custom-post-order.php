@@ -3,7 +3,7 @@
  * Plugin Name: Intuitive Custom Post Order
  * Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
  * Description: Intuitively, Order Items( Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites ) using a Drag and Drop Sortable JavaScript.
- * Version: 3.1.4.1
+ * Version: 3.1.4.2
  * Author: hijiri
  * Author URI: http://hijiriworld.com/web/
  * Text Domain: intuitive-custom-post-order
@@ -18,7 +18,7 @@
 
 define( 'HICPO_URL', plugins_url( '', __FILE__ ) );
 define( 'HICPO_DIR', plugin_dir_path( __FILE__ ) );
-define( 'HICPO_VER', '3.1.4.1' );
+define( 'HICPO_VER', '3.1.4.2' );
 
 /**
 * Uninstall hook
@@ -246,10 +246,10 @@ class Hicpo
 		if ( $this->_check_load_script_css() ) {
 			wp_enqueue_script( 'jquery' );
 			wp_enqueue_script( 'jquery-ui-sortable' );
-			wp_enqueue_script( 'hicpojs', HICPO_URL.'/js/hicpo.js', array( 'jquery' ), null, true );
+			wp_enqueue_script( 'hicpojs', HICPO_URL . '/js/hicpo.js', array( 'jquery' ), filemtime( HICPO_DIR . '/js/hicpo.js' ), true );
 			wp_localize_script( 'hicpojs', 'hicpojs_ajax_vars', array( 'nonce' => wp_create_nonce( 'hicpojs-ajax-nonce' ) ) );
 
-			wp_enqueue_style( 'hicpo', HICPO_URL.'/css/hicpo.css', array(), null );
+			wp_enqueue_style( 'hicpo', HICPO_URL . '/css/hicpo.css', array(), filemtime( HICPO_DIR . '/css/hicpo.css' ) );
 		}
 	}
 
