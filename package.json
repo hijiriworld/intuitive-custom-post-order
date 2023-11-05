@@ -1,40 +1,43 @@
 {
-	"name": "intuitive-custom-post-order",
-	"version": "3.1.4",
-	"description": "Intuitively order items (Posts, Pages, Custom Post Types, Custom Taxonomies, etc.) using drag and drop.",
-	"author": "Timo Hubois <t.hubois@pixelsaft.de>",
-	"license": "GPL-2.0-or-later",
-	"keywords": [
-		"wordpress",
-		"plugin",
-		"custom post order"
-	],
-	"homepage": "https://github.com/hijiriworld/intuitive-custom-post-order",
-	"repository": "https://github.com/hijiriworld/intuitive-custom-post-order.git",
-	"bugs": {
-		"url": "https://github.com/hijiriworld/intuitive-custom-post-order/issues"
-	},
-	"devDependencies": {
-		"@wordpress/scripts": "^25.4.0",
-		"npm-run-all": "^4.1.5",
-		"replace-in-files-cli": "^2.0.0"
-	},
-	"scripts": {
-		"format": "wp-scripts format",
-		"lint": "run-p --silent lint:*",
-		"lint:css": "wp-scripts lint-style",
-		"lint:js": "wp-scripts lint-js",
-		"lint:php": "./vendor/bin/phpcs",
-		"lint:md:docs": "wp-scripts lint-md-docs",
-		"lint:pkg-json": "wp-scripts lint-pkg-json",
-		"lint:fix": "run-p --silent lint:*:fix",
-		"lint:js:fix": "npm run lint:js -- --fix",
-		"lint:css:fix": "npm run lint:css -- --fix",
-		"lint:php:fix": "./vendor/bin/phpcbf",
-		"packages-update": "wp-scripts packages-update",
-		"plugin-zip": "wp-scripts plugin-zip && mkdir -p tmp && cp -r css tmp/ && cp -r js tmp/ && cd tmp && zip -r ../intuitive-custom-post-order.zip ./* && cd .. && rm -rf tmp && zip -d intuitive-custom-post-order.zip README.md",
-		"pre-release": "npm version patch --git-tag-version false && run-p --silent pre-release:*",
-		"pre-release:plugin-file": "replace-in-files --regex='(\\*\\s*Version:\\s)(\\d+(\\.\\d{1,3}){1,3})' --replacement=\"* Version: $npm_package_version\" $npm_package_name.php",
-		"pre-release:readme": "replace-in-files --regex='(Stable tag:\\s)(\\d+(\\.\\d{1,3}){1,3})' --replacement=\"Stable tag: $npm_package_version\" readme.txt"
-	}
+  "name": "intuitive-custom-post-order",
+  "version": "3.1.4",
+  "description": "Intuitively order items (Posts, Pages, Custom Post Types, Custom Taxonomies, etc.) using drag and drop.",
+  "author": "Timo Hubois <t.hubois@pixelsaft.de>",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "custom post order"
+  ],
+  "homepage": "https://github.com/hijiriworld/intuitive-custom-post-order",
+  "repository": "https://github.com/hijiriworld/intuitive-custom-post-order.git",
+  "bugs": {
+    "url": "https://github.com/hijiriworld/intuitive-custom-post-order/issues"
+  },
+  "engines": {
+    "node": "=18"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^26.16.0",
+    "npm-run-all": "^4.1.5",
+    "replace-in-files-cli": "^2.2.0"
+  },
+  "scripts": {
+    "format": "wp-scripts format",
+    "lint": "run-p --silent lint:*",
+    "lint:css": "wp-scripts lint-style",
+    "lint:js": "wp-scripts lint-js",
+    "lint:php": "./vendor/bin/phpcs",
+    "lint:md:docs": "wp-scripts lint-md-docs",
+    "lint:pkg-json": "wp-scripts lint-pkg-json",
+    "lint:fix": "run-p --silent lint:*:fix",
+    "lint:js:fix": "npm run lint:js -- --fix",
+    "lint:css:fix": "npm run lint:css -- --fix",
+    "lint:php:fix": "./vendor/bin/phpcbf",
+    "packages-update": "wp-scripts packages-update",
+    "plugin-zip": "wp-scripts plugin-zip && mkdir -p tmp && cp -r css tmp/ && cp -r js tmp/ && cd tmp && zip -r ../intuitive-custom-post-order.zip ./* && cd .. && rm -rf tmp && zip -d intuitive-custom-post-order.zip README.md",
+    "pre-release": "npm version patch --git-tag-version false && run-p --silent pre-release:*",
+    "pre-release:plugin-file": "replace-in-files --regex='(\\*\\s*Version:\\s)(\\d+(\\.\\d{1,3}){1,3})' --replacement=\"* Version: $npm_package_version\" $npm_package_name.php",
+    "pre-release:readme": "replace-in-files --regex='(Stable tag:\\s)(\\d+(\\.\\d{1,3}){1,3})' --replacement=\"Stable tag: $npm_package_version\" readme.txt"
+  }
 }
