@@ -77,7 +77,6 @@ $hicpo = new Hicpo();
 
 class Hicpo {
 
-
 	/**
 	 * Construct
 	 */
@@ -175,11 +174,21 @@ class Hicpo {
 	}
 
 	public function hicpo_load_plugin_textdomain() {
-		load_plugin_textdomain( 'intuitive-custom-post-order', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+		load_plugin_textdomain(
+			'intuitive-custom-post-order',
+			false,
+			basename( dirname( __FILE__ ) ) . '/languages/'
+		);
 	}
 
 	public function hicpo_admin_menu() {
-		add_options_page( __( 'Intuitive CPO', 'intuitive-custom-post-order' ), __( 'Intuitive CPO', 'intuitive-custom-post-order' ), 'manage_options', 'hicpo-settings', [ $this, 'hicpo_admin_page' ] );
+		add_options_page(
+			__( 'Intuitive CPO', 'intuitive-custom-post-order' ),
+			__( 'Intuitive CPO', 'intuitive-custom-post-order' ),
+			'manage_options',
+			'hicpo-settings',
+			[ $this, 'hicpo_admin_page' ]
+		);
 	}
 
 	public function hicpo_admin_page() {
@@ -187,7 +196,14 @@ class Hicpo {
 	}
 
 	public function hicpo_network_admin_menu() {
-		add_submenu_page( 'settings.php', __( 'Intuitive CPO', 'hicpo' ), __( 'Intuitive CPO', 'hicpo' ), 'manage_options', 'hicpo-network-settings', [ $this, 'hicpo_network_admin_page' ] );
+		add_submenu_page(
+			'settings.php',
+			__( 'Intuitive CPO', 'hicpo' ),
+			__( 'Intuitive CPO', 'hicpo' ),
+			'manage_options',
+			'hicpo-network-settings',
+			[ $this, 'hicpo_network_admin_page' ]
+		);
 	}
 
 	public function hicpo_network_admin_page() {
@@ -240,9 +256,10 @@ class Hicpo {
 			}
 
 			// post
-			if ( ! isset( $_GET['post_type'] ) &&
-				 strstr( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'wp-admin/edit.php' ) &&
-				 in_array( 'post', $objects )
+			if (
+				! isset( $_GET['post_type'] ) &&
+				strstr( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'wp-admin/edit.php' ) &&
+				in_array( 'post', $objects )
 			) {
 				$active = true;
 			}
@@ -270,7 +287,7 @@ class Hicpo {
 	}
 
 	public function hicpo_refresh() {
-		 global $wpdb;
+		global $wpdb;
 		$objects = $this->hicpo_get_options_objects();
 		$tags = $this->hicpo_get_options_tags();
 
@@ -340,7 +357,7 @@ class Hicpo {
 	}
 
 	public function hicpo_refresh_network() {
-		 global $pagenow;
+		global $pagenow;
 		if ( 'sites.php' === $pagenow && ! isset( $_GET['orderby'] ) ) {
 			add_filter( 'query', [ $this, 'hicpo_refresh_network_2' ] );
 		}
@@ -1009,7 +1026,7 @@ class Hicpo {
 
 	/* before wp v4.6.0 */
 	public function hicpo_refresh_front_network() {
-		global $wp_version;
+		 global $wp_version;
 		if ( version_compare( $wp_version, '4.6.0' ) < 0 ) {
 			global $blog_id;
 			if ( 1 != $blog_id ) {
