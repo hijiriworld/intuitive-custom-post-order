@@ -24,7 +24,7 @@ To ensure following WordPress coding standards [@wordpress/scripts](https://deve
 
 ### Dependencies
 
-* [Node](https://nodejs.org/en/) >= 14
+* [Node](https://nodejs.org/en/) >= 18
 * [Composer](https://getcomposer.org/download/) >= 2.0
 
 ### Installation
