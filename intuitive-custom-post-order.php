@@ -1,14 +1,14 @@
 <?php
 /*
  * Plugin Name: Intuitive Custom Post Order
- * Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
+ * Plugin URI:  http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
  * Description: Intuitively, Order Items (Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites) using a Drag and Drop Sortable JavaScript.
- * Version: 3.1.4.1
- * Author: hijiri
- * Author URI: http://hijiriworld.com/web/
+ * Version:     3.1.4.1
+ * Author:      hijiri
+ * Author URI:  http://hijiriworld.com/web/
  * Text Domain: intuitive-custom-post-order
  * Domain Path: /languages
- * License: GPLv2 or later
+ * License:     GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
