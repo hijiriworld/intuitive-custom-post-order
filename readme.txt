@@ -3,8 +3,8 @@ Contributors: hijiri
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TT5NP352P6MCU
 Tags: post order, posts order, order post, order posts, custom post type order, custom taxonomy order
 Requires at least: 3.5.0
-Tested up to: 5.5.1
-Stable tag: 3.1.3
+Tested up to: 6.1.1
+Stable tag: 3.1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,6 +100,16 @@ query_posts()
 Go to "screen options" and change "Number of items per page:".
 
 == Changelog ==
+
+= 3.1.4.1 =
+
+* fixed hicpo_add_capabilities: add capabilities only when role exists.
+
+= 3.1.4 =
+
+* fixed current security issues. (Thank you @timohubois)
+  Arbitrary Menu Order Update via CSRF.
+  Subscriber+ Arbitrary Menu Order Update.
 
 = 3.1.3 =
 

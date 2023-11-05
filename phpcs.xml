@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<ruleset name="intuitive-custom-post-order PHP Coding Standards">
+    <description>Coding Standards for the intuitive-custom-post-order WordPress Plugin.</description>
+    <!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
+    <!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
+    <!-- See https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards -->
+    <!-- See https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki -->
+    <!-- See https://github.com/wimg/PHPCompatibility -->
+
+    <!-- Check all files in this directory and the directories below it. -->
+    <file>./</file>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+
+    <!-- Strip the file paths down to the relevant bit -->
+    <arg name="basepath" value="./" />
+
+    <!-- Pass some flags to PHPCS:
+         p flag: Show progress of the run.
+         s flag: Show sniff codes in all reports.
+         v flag: Print verbose output.
+         n flag: Do not print warnings.
+         sp
+    -->
+    <arg value="psn"/>
+
+    <!-- Enable colors in report. -->
+    <arg name="colors"/>
+
+    <!-- Only check the PHP files. -->
+    <arg name="extensions" value="php"/>
+
+    <!-- Check for PHP cross-version compatibility. -->
+    <config name="testVersion" value="7.0-"/>
+    <rule ref="PHPCompatibilityWP"/>
+
+    <!-- Check for WordPress cross-version compatibility. -->
+    <config name="minimum_supported_wp_version" value="3.5"/>
+
+    <!-- Let's check that everything is properly documented. -->
+    <!-- <rule ref="WordPress-Docs"/> -->
+
+    <!-- Allow short array syntax -->
+    <rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
+    </rule>
+
+    <!-- Disallow long array syntax -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax" />
+
+    <!-- Don't align equal signs -->
+    <rule ref="Generic.Formatting.MultipleStatementAlignment.NotSameWarning">
+        <exclude name="Generic.Formatting.MultipleStatementAlignment.NotSameWarning" />
+    </rule>
+
+    <!-- Don't aligned array double arrow -->
+    <rule ref="WordPress.Arrays.MultipleStatementAlignment">
+        <exclude name="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned" />
+    </rule>
+
+    <!-- Check that everything is properly documented. -->
+    <!-- <rule ref="WordPress-Docs"/> -->
+
+    <!-- Include the WordPress-Extra standard. -->
+    <rule ref="WordPress-Extra" />
+
+    <!-- Useful code analysis sniffs. -->
+    <rule ref="WordPress.CodeAnalysis"/>
+
+    <!-- Date Time sniffs. -->
+    <rule ref="WordPress.DateTime"/>
+
+    <!-- Database sniffs. -->
+    <rule ref="WordPress.DB"/>
+
+    <!-- Security sniffs. -->
+    <rule ref="WordPress.Security"/>
+
+    <!-- I18n sniffs. -->
+    <rule ref="WordPress.Utils.I18nTextDomainFixer"/>
+
+    <!-- Exclude InvalidClassFileName for main plugin file -->
+    <rule ref="WordPress.Files.FileName.InvalidClassFileName">
+        <exclude-pattern>intuitive-custom-post-order.php</exclude-pattern>
+    </rule>
+</ruleset>
