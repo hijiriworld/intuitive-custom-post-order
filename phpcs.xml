@@ -38,12 +38,14 @@
     <!-- Check for WordPress cross-version compatibility. -->
     <config name="minimum_supported_wp_version" value="3.5"/>
 
-    <!-- Let's check that everything is properly documented. -->
-    <!-- <rule ref="WordPress-Docs"/> -->
-
     <!-- Allow short array syntax -->
-    <rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
-        <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
+    <rule ref="Universal.Arrays.DisallowShortArraySyntax.Found">
+        <exclude name="Universal.Arrays.DisallowShortArraySyntax.Found" />
+    </rule>
+
+    <!-- Excluding the rule that checks if functions are separated from object-oriented code. This is because our codebase allows mixed functions and OO code. -->
+    <rule ref="Universal.Files.SeparateFunctionsFromOO.Mixed">
+        <exclude name="Universal.Files.SeparateFunctionsFromOO.Mixed" />
     </rule>
 
     <!-- Disallow long array syntax -->

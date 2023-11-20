@@ -122,7 +122,7 @@ Go to "screen options" and change "Number of items per page:".
 = 3.1.2 =
 
 * Solved the problem of layout collapse during drag and drop sorting.
-  
+
 = 3.1.1 =
 
 * Remove deprecated function 'secreen_icon()'.
@@ -175,7 +175,7 @@ Go to "screen options" and change "Number of items per page:".
 
 * Support the Custom Taxonomy Order!!
   ( wp_list_categories, get_categories, the_terms, the_tags, get_terms, get_the_terms, get_the_term_list, the_category, wp_dropdown_categories, the_taxonomies )
-* Suuport the sorting in admin UI.
+* Support the sorting in admin UI.
   While having sorted, Drag and Drop Sortable Javascript don't run.
 * Support non public objects( show_ui=true, show_in_menu=true )
 * Add Japanese Translations.

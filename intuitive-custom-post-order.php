@@ -1,14 +1,14 @@
 <?php
 /*
  * Plugin Name: Intuitive Custom Post Order
- * Plugin URI: http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
+ * Plugin URI:  http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
  * Description: Intuitively, Order Items (Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites) using a Drag and Drop Sortable JavaScript.
- * Version: 3.1.4.1
- * Author: hijiri
- * Author URI: http://hijiriworld.com/web/
+ * Version:     3.1.4.1
+ * Author:      hijiri
+ * Author URI:  http://hijiriworld.com/web/
  * Text Domain: intuitive-custom-post-order
  * Domain Path: /languages
- * License: GPLv2 or later
+ * License:     GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
@@ -26,12 +26,10 @@ define( 'HICPO_VER', $plugin_version );
 /**
  * Uninstall hook
  */
-
 register_uninstall_hook( __FILE__, 'hicpo_uninstall' );
 function hicpo_uninstall() {
 	global $wpdb;
 	if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-		$curr_blog = $wpdb->blogid;
 		$blogids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
 		foreach ( $blogids as $blog_id ) {
 			switch_to_blog( $blog_id );
@@ -49,23 +47,22 @@ function hicpo_uninstall() {
 // drop term_order COLUMN to $wpdb->terms TABLE
 function hicpo_uninstall_db_terms() {
 	global $wpdb;
-	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-	$result = $wpdb->query( "DESCRIBE $wpdb->terms `term_order`" );
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- its ok.
+	$result = $wpdb->query( "DESCRIBE  $wpdb->terms `term_order`" );
 	if ( $result ) {
-		$query = "ALTER TABLE $wpdb->terms DROP `term_order`";
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-		$result = $wpdb->query( $query );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- its ok.
+		$result = $wpdb->query( "ALTER TABLE $wpdb->terms DROP `term_order`" );
 	}
 }
+
 // drop menu_order COLUMN to $wpdb->blogs TABLE
 function hicpo_uninstall_db_blogs() {
 	global $wpdb;
-	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- its ok.
 	$result = $wpdb->query( "DESCRIBE $wpdb->blogs `menu_order`" );
 	if ( $result ) {
-		$query = "ALTER TABLE $wpdb->blogs DROP `menu_order`";
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-		$result = $wpdb->query( $query );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- its ok.
+		$result = $wpdb->query( "ALTER TABLE $wpdb->blogs DROP `menu_order`" );
 	}
 }
 
@@ -76,7 +73,6 @@ function hicpo_uninstall_db_blogs() {
 $hicpo = new Hicpo();
 
 class Hicpo {
-
 
 	/**
 	 * Construct
@@ -89,22 +85,22 @@ class Hicpo {
 		}
 
 		// textdomain
-		add_action( 'plugins_loaded', [ $this, 'my_plugin_load_plugin_textdomain' ] );
+		add_action( 'plugins_loaded', [ $this, 'hicpo_load_plugin_textdomain' ] );
 
 		// add menu
-		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
+		add_action( 'admin_menu', [ $this, 'hicpo_admin_menu' ] );
 
 		// admin init
 		if ( empty( $_GET ) ) {
-			add_action( 'admin_init', [ $this, 'refresh' ] );
+			add_action( 'admin_init', [ $this, 'hicpo_refresh' ] );
 		}
 		add_action( 'admin_init', [ $this, 'hicpo_add_capabilities' ] );
-		add_action( 'admin_init', [ $this, 'update_options' ] );
-		add_action( 'admin_init', [ $this, 'load_script_css' ] );
+		add_action( 'admin_init', [ $this, 'hicpo_update_options' ] );
+		add_action( 'admin_init', [ $this, 'hicpo_load_script_css' ] );
 
 		// sortable ajax action
-		add_action( 'wp_ajax_update-menu-order', [ $this, 'update_menu_order' ] );
-		add_action( 'wp_ajax_update-menu-order-tags', [ $this, 'update_menu_order_tags' ] );
+		add_action( 'wp_ajax_update-menu-order', [ $this, 'hicpo_update_menu_order' ] );
+		add_action( 'wp_ajax_update-menu-order-tags', [ $this, 'hicpo_update_menu_order_tags' ] );
 
 		// reorder post types
 		add_action( 'pre_get_posts', [ $this, 'hicpo_pre_get_posts' ] );
@@ -121,9 +117,9 @@ class Hicpo {
 
 		// reorder sites
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-			add_action( 'network_admin_menu', [ $this, 'network_admin_menu' ] );
-			add_action( 'admin_init', [ $this, 'update_network_options' ] );
-			add_action( 'wp_ajax_update-menu-order-sites', [ $this, 'update_menu_order_sites' ] );
+			add_action( 'network_admin_menu', [ $this, 'hicpo_network_admin_menu' ] );
+			add_action( 'admin_init', [ $this, 'hicpo_update_network_options' ] );
+			add_action( 'wp_ajax_update-menu-order-sites', [ $this, 'hicpo_update_menu_order_sites' ] );
 
 			// networkadmin サイト削除時はサイト並び替え除外
 			if (
@@ -137,14 +133,14 @@ class Hicpo {
 				// call from 'get_sites'
 				add_filter( 'sites_clauses', [ $this, 'hicpo_sites_clauses' ], 10, 1 );
 
-				add_action( 'admin_init', [ $this, 'refresh_network' ] );
+				add_action( 'admin_init', [ $this, 'hicpo_refresh_network' ] );
 
 				// adminbar sites reorder
 				add_filter( 'get_blogs_of_user', [ $this, 'hicpo_get_blogs_of_user' ], 10, 3 );
 			}
 
 			// before wp v4.6.0 * wp_get_sites
-			add_action( 'init', [ $this, 'refresh_front_network' ] );
+			add_action( 'init', [ $this, 'hicpo_refresh_front_network' ] );
 		}
 	}
 
@@ -174,27 +170,44 @@ class Hicpo {
 		update_option( 'hicpo_ver', HICPO_VER );
 	}
 
-	public function my_plugin_load_plugin_textdomain() {
-		load_plugin_textdomain( 'intuitive-custom-post-order', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+	public function hicpo_load_plugin_textdomain() {
+		load_plugin_textdomain(
+			'intuitive-custom-post-order',
+			false,
+			basename( __DIR__ ) . '/languages/'
+		);
 	}
 
-	public function admin_menu() {
-		add_options_page( __( 'Intuitive CPO', 'intuitive-custom-post-order' ), __( 'Intuitive CPO', 'intuitive-custom-post-order' ), 'manage_options', 'hicpo-settings', [ $this, 'admin_page' ] );
+	public function hicpo_admin_menu() {
+		add_options_page(
+			__( 'Intuitive CPO', 'intuitive-custom-post-order' ),
+			__( 'Intuitive CPO', 'intuitive-custom-post-order' ),
+			'manage_options',
+			'hicpo-settings',
+			[ $this, 'hicpo_admin_page' ]
+		);
 	}
 
-	public function admin_page() {
+	public function hicpo_admin_page() {
 		require HICPO_DIR . 'admin/settings.php';
 	}
 
-	public function network_admin_menu() {
-		add_submenu_page( 'settings.php', __( 'Intuitive CPO', 'hicpo' ), __( 'Intuitive CPO', 'hicpo' ), 'manage_options', 'hicpo-network-settings', [ $this, 'network_admin_page' ] );
+	public function hicpo_network_admin_menu() {
+		add_submenu_page(
+			'settings.php',
+			__( 'Intuitive CPO', 'hicpo' ),
+			__( 'Intuitive CPO', 'hicpo' ),
+			'manage_options',
+			'hicpo-network-settings',
+			[ $this, 'hicpo_network_admin_page' ]
+		);
 	}
 
-	public function network_admin_page() {
+	public function hicpo_network_admin_page() {
 		require HICPO_DIR . 'admin/settings-network.php';
 	}
 
-	public function _check_load_script_css() {
+	private function _hicpo_check_load_script_css() {
 		global $pagenow, $typenow;
 
 		$active = false;
@@ -213,8 +226,8 @@ class Hicpo {
 			return true;
 		}
 
-		$objects = $this->get_hicpo_options_objects();
-		$tags = $this->get_hicpo_options_tags();
+		$objects = $this->hicpo_get_options_objects();
+		$tags = $this->hicpo_get_options_tags();
 
 		if ( empty( $objects ) && empty( $tags ) ) {
 			return false;
@@ -240,9 +253,10 @@ class Hicpo {
 			}
 
 			// post
-			if ( ! isset( $_GET['post_type'] ) &&
-				 strstr( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'wp-admin/edit.php' ) &&
-				 in_array( 'post', $objects )
+			if (
+				! isset( $_GET['post_type'] ) &&
+				strstr( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'wp-admin/edit.php' ) &&
+				in_array( 'post', $objects )
 			) {
 				$active = true;
 			}
@@ -257,8 +271,8 @@ class Hicpo {
 		return $active;
 	}
 
-	public function load_script_css() {
-		if ( $this->_check_load_script_css() ) {
+	public function hicpo_load_script_css() {
+		if ( $this->_hicpo_check_load_script_css() ) {
 			wp_enqueue_script( 'jquery' );
 			wp_enqueue_script( 'jquery-ui-sortable' );
 
@@ -269,36 +283,39 @@ class Hicpo {
 		}
 	}
 
-	public function refresh() {
-		 global $wpdb;
-		$objects = $this->get_hicpo_options_objects();
-		$tags = $this->get_hicpo_options_tags();
+	public function hicpo_refresh() {
+		global $wpdb;
+		$objects = $this->hicpo_get_options_objects();
+		$tags = $this->hicpo_get_options_tags();
 
 		if ( ! empty( $objects ) ) {
 			foreach ( $objects as $object ) {
-				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-				$result = $wpdb->get_results(
+				$query = $wpdb->prepare(
 					"
 					SELECT count(*) as cnt, max(menu_order) as max, min(menu_order) as min
 					FROM $wpdb->posts
-					WHERE post_type = '" . $object . "' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
-				"
+					WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+					",
+					$object
 				);
-				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+				$result = $wpdb->get_results( $query );
 				if ( 0 == $result[0]->cnt || $result[0]->cnt == $result[0]->max ) {
 					continue;
 				}
 
-				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-				$results = $wpdb->get_results(
+				$query = $wpdb->prepare(
 					"
 					SELECT ID
 					FROM $wpdb->posts
-					WHERE post_type = '" . $object . "' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+					WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
 					ORDER BY menu_order ASC
-				"
+				",
+					$object
 				);
-				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+				$results = $wpdb->get_results( $query );
+
 				foreach ( $results as $key => $result ) {
 					$wpdb->update( $wpdb->posts, [ 'menu_order' => $key + 1 ], [ 'ID' => $result->ID ] );
 				}
@@ -307,31 +324,34 @@ class Hicpo {
 
 		if ( ! empty( $tags ) ) {
 			foreach ( $tags as $taxonomy ) {
-				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-				$result = $wpdb->get_results(
+				$query = $wpdb->prepare(
 					"
 					SELECT count(*) as cnt, max(term_order) as max, min(term_order) as min
 					FROM $wpdb->terms AS terms
 					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
-					WHERE term_taxonomy.taxonomy = '" . $taxonomy . "'
-				"
+					WHERE term_taxonomy.taxonomy = %s
+				",
+					$taxonomy
 				);
-				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+				$result = $wpdb->get_results( $query );
+
 				if ( 0 == $result[0]->cnt || $result[0]->cnt == $result[0]->max ) {
 					continue;
 				}
 
-				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-				$results = $wpdb->get_results(
+				$query = $wpdb->prepare(
 					"
 					SELECT terms.term_id
 					FROM $wpdb->terms AS terms
 					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
-					WHERE term_taxonomy.taxonomy = '" . $taxonomy . "'
+					WHERE term_taxonomy.taxonomy = %s
 					ORDER BY term_order ASC
-				"
+				",
+					$taxonomy
 				);
-				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+				$results = $wpdb->get_results( $query );
 				foreach ( $results as $key => $result ) {
 					$wpdb->update( $wpdb->terms, [ 'term_order' => $key + 1 ], [ 'term_id' => $result->term_id ] );
 				}
@@ -339,14 +359,14 @@ class Hicpo {
 		}
 	}
 
-	public function refresh_network() {
-		 global $pagenow;
+	public function hicpo_refresh_network() {
+		global $pagenow;
 		if ( 'sites.php' === $pagenow && ! isset( $_GET['orderby'] ) ) {
-			add_filter( 'query', [ $this, 'refresh_network_2' ] );
+			add_filter( 'query', [ $this, 'hicpo_refresh_network_2' ] );
 		}
 	}
 
-	public function refresh_network_2( $query ) {
+	public function hicpo_refresh_network_2( $query ) {
 		global $wpdb, $wp_version, $blog_id;
 
 		/**
@@ -380,7 +400,7 @@ class Hicpo {
 		return $query;
 	}
 
-	public function update_menu_order() {
+	public function hicpo_update_menu_order() {
 		if ( ! isset( $_POST['nonce'] ) ) {
 			return;
 		}
@@ -435,18 +455,28 @@ class Hicpo {
 
 		// same number check
 		$post_type = get_post_type( $id );
-		$sql = "SELECT COUNT(menu_order) AS mo_count, post_type, menu_order FROM $wpdb->posts
-			 WHERE post_type = '{$post_type}' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
-			 AND menu_order > 0 GROUP BY post_type, menu_order HAVING (mo_count) > 1";
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-		$results = $wpdb->get_results( $sql );
+		$query = $wpdb->prepare(
+			"
+			SELECT COUNT(menu_order) AS mo_count, post_type, menu_order FROM $wpdb->posts
+			WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+			AND menu_order > 0 GROUP BY post_type, menu_order HAVING (mo_count) > 1
+			",
+			$post_type
+		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+		$results = $wpdb->get_results( $query );
 		if ( count( $results ) > 0 ) {
 			// menu_order refresh
-			$sql = "SELECT ID, menu_order FROM $wpdb->posts
-					WHERE post_type = '{$post_type}' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
-					AND menu_order > 0 ORDER BY menu_order";
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-			$results = $wpdb->get_results( $sql );
+			$query = $wpdb->prepare(
+				"
+			SELECT ID, menu_order FROM $wpdb->posts
+			WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+			AND menu_order > 0 ORDER BY menu_order
+			",
+				$post_type
+			);
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+			$results = $wpdb->get_results( $query );
 			foreach ( $results as $key => $result ) {
 				$view_posi = array_search( $result->ID, $id_arr, true );
 				if ( false === $view_posi ) {
@@ -464,7 +494,7 @@ class Hicpo {
 		}
 	}
 
-	public function update_menu_order_tags() {
+	public function hicpo_update_menu_order_tags() {
 		if ( ! isset( $_POST['nonce'] ) ) {
 			return;
 		}
@@ -516,21 +546,33 @@ class Hicpo {
 		// same number check
 		$term = get_term( $id );
 		$taxonomy = $term->taxonomy;
-		$sql = "SELECT COUNT(term_order) AS to_count, term_order
+		$query = $wpdb->prepare(
+			"
+			SELECT COUNT(term_order) AS to_count, term_order
 			FROM $wpdb->terms AS terms
 			INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
-			WHERE term_taxonomy.taxonomy = '" . $taxonomy . "'GROUP BY taxonomy, term_order HAVING (to_count) > 1";
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-		$results = $wpdb->get_results( $sql );
+			WHERE term_taxonomy.taxonomy = %s GROUP BY taxonomy, term_order HAVING (to_count) > 1
+			",
+			$taxonomy
+		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+		$results = $wpdb->get_results( $query );
+
 		if ( count( $results ) > 0 ) {
 			// term_order refresh
-			$sql = "SELECT terms.term_id, term_order
-			FROM $wpdb->terms AS terms
-			INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
-			WHERE term_taxonomy.taxonomy = '" . $taxonomy . "'
-			ORDER BY term_order ASC";
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-			$results = $wpdb->get_results( $sql );
+			$query = $wpdb->prepare(
+				"
+				SELECT terms.term_id, term_order
+				FROM $wpdb->terms AS terms
+				INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
+				WHERE term_taxonomy.taxonomy = %s
+				ORDER BY term_order ASC
+				",
+				$taxonomy
+			);
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+			$results = $wpdb->get_results( $query );
+
 			foreach ( $results as $key => $result ) {
 				$view_posi = array_search( $result->term_id, $id_arr, true );
 				if ( false === $view_posi ) {
@@ -548,7 +590,7 @@ class Hicpo {
 		}
 	}
 
-	public function update_menu_order_sites() {
+	public function hicpo_update_menu_order_sites() {
 		if ( ! isset( $_POST['nonce'] ) ) {
 			return;
 		}
@@ -599,7 +641,7 @@ class Hicpo {
 	 * 判定は: アイテム数が 0 以上で menu_order の最大値とアイテム数が同じではないオブジェクト
 	 */
 
-	public function update_options() {
+	public function hicpo_update_options() {
 		global $wpdb;
 
 		if ( ! isset( $_POST['hicpo_submit'] ) ) {
@@ -614,46 +656,49 @@ class Hicpo {
 
 		update_option( 'hicpo_options', $input_options );
 
-		$objects = $this->get_hicpo_options_objects();
-		$tags = $this->get_hicpo_options_tags();
+		$objects = $this->hicpo_get_options_objects();
+		$tags = $this->hicpo_get_options_tags();
 
 		if ( ! empty( $objects ) ) {
 			foreach ( $objects as $object ) {
-				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-				$result = $wpdb->get_results(
+				$query = $wpdb->prepare(
 					"
 					SELECT count(*) as cnt, max(menu_order) as max, min(menu_order) as min
 					FROM $wpdb->posts
-					WHERE post_type = '" . $object . "' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
-				"
+					WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+				",
+					$object
 				);
-				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+				$result = $wpdb->get_results( $query );
 				if ( 0 == $result[0]->cnt || $result[0]->cnt == $result[0]->max ) {
 					continue;
 				}
 
 				if ( 'page' == $object ) {
-					// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-					$results = $wpdb->get_results(
+					$query = $wpdb->prepare(
 						"
 						SELECT ID
 						FROM $wpdb->posts
-						WHERE post_type = '" . $object . "' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+						WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
 						ORDER BY menu_order, post_title ASC
-					"
+					",
+						$object
 					);
-					// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+					$results = $wpdb->get_results( $query );
 				} else {
-					// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-					$results = $wpdb->get_results(
+					$query = $wpdb->prepare(
 						"
 						SELECT ID
 						FROM $wpdb->posts
-						WHERE post_type = '" . $object . "' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+						WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
 						ORDER BY post_date DESC
-					"
+					",
+						$object
 					);
-					// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+					$results = $wpdb->get_results( $query );
 				}
 				foreach ( $results as $key => $result ) {
 					$wpdb->update( $wpdb->posts, [ 'menu_order' => $key + 1 ], [ 'ID' => $result->ID ] );
@@ -663,31 +708,33 @@ class Hicpo {
 
 		if ( ! empty( $tags ) ) {
 			foreach ( $tags as $taxonomy ) {
-				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-				$result = $wpdb->get_results(
+				$query = $wpdb->prepare(
 					"
 					SELECT count(*) as cnt, max(term_order) as max, min(term_order) as min
 					FROM $wpdb->terms AS terms
 					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
-					WHERE term_taxonomy.taxonomy = '" . $taxonomy . "'
-				"
+					WHERE term_taxonomy.taxonomy = %s
+				",
+					$taxonomy
 				);
-				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+				$result = $wpdb->get_results( $query );
 				if ( 0 == $result[0]->cnt || $result[0]->cnt == $result[0]->max ) {
 					continue;
 				}
 
-				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
-				$results = $wpdb->get_results(
+				$query = $wpdb->prepare(
 					"
 					SELECT terms.term_id
 					FROM $wpdb->terms AS terms
 					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
-					WHERE term_taxonomy.taxonomy = '" . $taxonomy . "'
+					WHERE term_taxonomy.taxonomy = %s
 					ORDER BY name ASC
-				"
+				",
+					$taxonomy
 				);
-				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
+				$results = $wpdb->get_results( $query );
 				foreach ( $results as $key => $result ) {
 					$wpdb->update( $wpdb->terms, [ 'term_order' => $key + 1 ], [ 'term_id' => $result->term_id ] );
 				}
@@ -697,7 +744,7 @@ class Hicpo {
 		wp_redirect( 'admin.php?page=hicpo-settings&msg=update' );
 	}
 
-	public function update_network_options() {
+	public function hicpo_update_network_options() {
 		global $wpdb;
 
 		if ( ! isset( $_POST['hicpo_network_submit'] ) ) {
@@ -711,14 +758,12 @@ class Hicpo {
 		update_option( 'hicpo_network_sites', $hicpo_network_sites );
 
 		// Initial
-		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- it is ok.
 		$result = $wpdb->get_results(
 			"
 			SELECT count(*) as cnt, max(menu_order) as max, min(menu_order) as min
 			FROM $wpdb->blogs
-		"
+			"
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 		if ( 0 != $result[0]->cnt && $result[0]->cnt != $result[0]->max ) {
 			$results = $wpdb->get_results(
 				"
@@ -738,7 +783,7 @@ class Hicpo {
 	public function hicpo_previous_post_where( $where ) {
 		global $post;
 
-		$objects = $this->get_hicpo_options_objects();
+		$objects = $this->hicpo_get_options_objects();
 		if ( empty( $objects ) ) {
 			return $where;
 		}
@@ -753,7 +798,7 @@ class Hicpo {
 	public function hicpo_previous_post_sort( $orderby ) {
 		global $post;
 
-		$objects = $this->get_hicpo_options_objects();
+		$objects = $this->hicpo_get_options_objects();
 		if ( empty( $objects ) ) {
 			return $orderby;
 		}
@@ -767,7 +812,7 @@ class Hicpo {
 	public function hicpo_next_post_where( $where ) {
 		global $post;
 
-		$objects = $this->get_hicpo_options_objects();
+		$objects = $this->hicpo_get_options_objects();
 		if ( empty( $objects ) ) {
 			return $where;
 		}
@@ -782,7 +827,7 @@ class Hicpo {
 	public function hicpo_next_post_sort( $orderby ) {
 		global $post;
 
-		$objects = $this->get_hicpo_options_objects();
+		$objects = $this->hicpo_get_options_objects();
 		if ( empty( $objects ) ) {
 			return $orderby;
 		}
@@ -794,7 +839,7 @@ class Hicpo {
 	}
 
 	public function hicpo_pre_get_posts( $wp_query ) {
-		$objects = $this->get_hicpo_options_objects();
+		$objects = $this->hicpo_get_options_objects();
 		if ( empty( $objects ) ) {
 			return false;
 		}
@@ -833,10 +878,8 @@ class Hicpo {
 					}
 				}
 				// post
-			} else {
-				if ( in_array( 'post', $objects ) ) {
+			} elseif ( in_array( 'post', $objects ) ) {
 					$active = true;
-				}
 			}
 
 			if ( ! $active ) {
@@ -868,7 +911,7 @@ class Hicpo {
 			return $orderby;
 		}
 
-		$tags = $this->get_hicpo_options_tags();
+		$tags = $this->hicpo_get_options_tags();
 
 		if ( ! isset( $args['taxonomy'] ) ) {
 			return $orderby;
@@ -884,7 +927,7 @@ class Hicpo {
 	}
 
 	public function hicpo_get_object_terms( $terms ) {
-		$tags = $this->get_hicpo_options_tags();
+		$tags = $this->hicpo_get_options_tags();
 
 		if ( is_admin() && isset( $_GET['orderby'] ) ) {
 			return $terms;
@@ -901,11 +944,11 @@ class Hicpo {
 			}
 		}
 
-		usort( $terms, [ $this, 'taxcmp' ] );
+		usort( $terms, [ $this, 'hicpo_taxcmp' ] );
 		return $terms;
 	}
 
-	public function taxcmp( $a, $b ) {
+	private function hicpo_taxcmp( $a, $b ) {
 		if ( $a->term_order == $b->term_order ) {
 			return 0;
 		}
@@ -925,10 +968,8 @@ class Hicpo {
 			if ( ! $hicpo_network_sites ) {
 				return $pieces;
 			}
-		} else {
-			if ( ! get_option( 'hicpo_network_sites' ) ) {
+		} elseif ( ! get_option( 'hicpo_network_sites' ) ) {
 				return $pieces;
-			}
 		}
 
 		global $wp_version;
@@ -950,10 +991,8 @@ class Hicpo {
 			if ( ! $hicpo_network_sites ) {
 				return $blogs;
 			}
-		} else {
-			if ( ! get_option( 'hicpo_network_sites' ) ) {
+		} elseif ( ! get_option( 'hicpo_network_sites' ) ) {
 				return $blogs;
-			}
 		}
 		global $wpdb, $wp_version;
 
@@ -1008,8 +1047,8 @@ class Hicpo {
 	}
 
 	/* before wp v4.6.0 */
-	public function refresh_front_network() {
-		global $wp_version;
+	public function hicpo_refresh_front_network() {
+		 global $wp_version;
 		if ( version_compare( $wp_version, '4.6.0' ) < 0 ) {
 			global $blog_id;
 			if ( 1 != $blog_id ) {
@@ -1018,15 +1057,13 @@ class Hicpo {
 				if ( ! $hicpo_network_sites ) {
 					return;
 				}
-			} else {
-				if ( ! get_option( 'hicpo_network_sites' ) ) {
+			} elseif ( ! get_option( 'hicpo_network_sites' ) ) {
 					return;
-				}
 			}
-			add_filter( 'query', [ $this, 'refresh_front_network_2' ] );
+			add_filter( 'query', [ $this, 'hicpo_refresh_front_network_2' ] );
 		}
 	}
-	public function refresh_front_network_2( $query ) {
+	public function hicpo_refresh_front_network_2( $query ) {
 		global $wpdb;
 		if ( false !== strpos( $query, "SELECT  blog_id FROM $wpdb->blogs    ORDER BY blog_id ASC" ) ) {
 			$query = str_replace( 'ORDER BY blog_id ASC', '', $query );
@@ -1045,12 +1082,12 @@ class Hicpo {
 		return $query;
 	}
 
-	public function get_hicpo_options_objects() {
+	public function hicpo_get_options_objects() {
 		$hicpo_options = get_option( 'hicpo_options' ) ? get_option( 'hicpo_options' ) : [];
 		$objects = isset( $hicpo_options['objects'] ) && is_array( $hicpo_options['objects'] ) ? $hicpo_options['objects'] : [];
 		return $objects;
 	}
-	public function get_hicpo_options_tags() {
+	public function hicpo_get_options_tags() {
 		$hicpo_options = get_option( 'hicpo_options' ) ? get_option( 'hicpo_options' ) : [];
 		$tags = isset( $hicpo_options['tags'] ) && is_array( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : [];
 		return $tags;
@@ -1059,7 +1096,7 @@ class Hicpo {
 	public function hicpo_add_capabilities() {
 		$administrator = get_role( 'administrator' );
 		if ( $administrator ) {
-			$administrator->add_cap( 'hicpo_load_script_css' );
+			$administrator->add_cap( 'hicpo_hicpo_load_script_css' );
 			$administrator->add_cap( 'hicpo_update_menu_order' );
 			$administrator->add_cap( 'hicpo_update_menu_order_tags' );
 			$administrator->add_cap( 'hicpo_update_menu_order_sites' );
@@ -1067,7 +1104,7 @@ class Hicpo {
 
 		$editor = get_role( 'editor' );
 		if ( $editor ) {
-			$editor->add_cap( 'hicpo_load_script_css' );
+			$editor->add_cap( 'hicpo_hicpo_load_script_css' );
 			$editor->add_cap( 'hicpo_update_menu_order' );
 			$editor->add_cap( 'hicpo_update_menu_order_tags' );
 		}
