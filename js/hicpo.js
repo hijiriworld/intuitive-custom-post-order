@@ -1,5 +1,5 @@
 /* global jQuery, ajaxurl, hicpojs_ajax_vars */
-
+console.log( 'hicpo loaded' );
 ( function ( $ ) {
 	const fixHelper = function ( e, ui ) {
 		ui.children()
@@ -32,6 +32,7 @@
 		helper: fixHelper,
 		// eslint-disable-next-line no-unused-vars
 		update( e, ui ) {
+			console.log( 'running term order' );
 			$.post( ajaxurl, {
 				action: 'update-menu-order-tags',
 				nonce: hicpojs_ajax_vars.nonce, // eslint-disable-line camelcase
