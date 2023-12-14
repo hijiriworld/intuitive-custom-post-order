@@ -492,6 +492,8 @@ class Hicpo {
 				$wpdb->update( $wpdb->posts, [ 'menu_order' => $oreder_no ], [ 'ID' => intval( $id ) ] );
 			}
 		}
+
+		wp_cache_flush();
 	}
 
 	public function hicpo_update_menu_order_tags() {
