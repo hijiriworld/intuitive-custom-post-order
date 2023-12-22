@@ -1,6 +1,6 @@
 {
   "name": "intuitive-custom-post-order",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "description": "Intuitively order items (Posts, Pages, Custom Post Types, Custom Taxonomies, etc.) using drag and drop.",
   "author": "Timo Hubois <t.hubois@pixelsaft.de>",
   "license": "GPL-2.0-or-later",
