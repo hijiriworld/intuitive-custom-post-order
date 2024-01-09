@@ -492,6 +492,9 @@ class Hicpo {
 				$wpdb->update( $wpdb->posts, [ 'menu_order' => $oreder_no ], [ 'ID' => intval( $id ) ] );
 			}
 		}
+
+		// clears cache so this is compatible with object caching systems
+		wp_cache_flush();
 	}
 
 	public function hicpo_update_menu_order_tags() {
@@ -588,6 +591,9 @@ class Hicpo {
 				$wpdb->update( $wpdb->terms, [ 'term_order' => $oreder_no ], [ 'term_id' => $id ] );
 			}
 		}
+
+		// clears cache so this is compatible with object caching systems
+		wp_cache_flush();
 	}
 
 	public function hicpo_update_menu_order_sites() {
@@ -629,6 +635,9 @@ class Hicpo {
 				$wpdb->update( $wpdb->blogs, [ 'menu_order' => $position + 1 ], [ 'blog_id' => intval( $id ) ] );
 			}
 		}
+
+		// clears cache so this is compatible with object caching systems
+		wp_cache_flush();
 	}
 
 	/**
