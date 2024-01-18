@@ -14,9 +14,13 @@ $hicpo_tags = $hicpo_options['tags'] ?? [];
 <div id="message" class="updated below-h2">
 	<?php if ( 'update' === $_GET['msg'] ) : ?>
 		<p><?php esc_html_e( 'Settings saved.' ); ?></p>
-	<?php endif; ?>
+		<?php
+	endif;
+	?>
 </div>
-<?php endif; ?>
+	<?php
+endif;
+?>
 
 <form method="post">
 
