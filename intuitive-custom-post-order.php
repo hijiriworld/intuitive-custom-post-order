@@ -267,7 +267,7 @@ class Hicpo {
 		}
 
 		if ( ! empty( $tags ) && ( isset( $_GET['taxonomy'] ) && in_array( $_GET['taxonomy'], $tags ) ) ) {
-			$active = true;
+			return true;
 		}
 
 		return $active;
@@ -302,7 +302,11 @@ class Hicpo {
 				);
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
 				$result = $wpdb->get_results( $query );
-				if ( 0 == $result[0]->cnt || $result[0]->cnt == $result[0]->max ) {
+				if ( 0 == $result[0]->cnt ) {
+					continue;
+				}
+
+				if ( $result[0]->cnt == $result[0]->max ) {
 					continue;
 				}
 
@@ -337,8 +341,11 @@ class Hicpo {
 				);
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
 				$result = $wpdb->get_results( $query );
+				if ( 0 == $result[0]->cnt ) {
+					continue;
+				}
 
-				if ( 0 == $result[0]->cnt || $result[0]->cnt == $result[0]->max ) {
+				if ( $result[0]->cnt == $result[0]->max ) {
 					continue;
 				}
 
@@ -363,9 +370,15 @@ class Hicpo {
 
 	public function hicpo_refresh_network() {
 		global $pagenow;
-		if ( 'sites.php' === $pagenow && ! isset( $_GET['orderby'] ) ) {
-			add_filter( 'query', [ $this, 'hicpo_refresh_network_2' ] );
+		if ( 'sites.php' !== $pagenow ) {
+			return;
 		}
+
+		if ( isset( $_GET['orderby'] ) ) {
+			return;
+		}
+
+		add_filter( 'query', [ $this, 'hicpo_refresh_network_2' ] );
 	}
 
 	public function hicpo_refresh_network_2( $query ) {
@@ -677,7 +690,11 @@ class Hicpo {
 				);
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
 				$result = $wpdb->get_results( $query );
-				if ( 0 == $result[0]->cnt || $result[0]->cnt == $result[0]->max ) {
+				if ( 0 == $result[0]->cnt ) {
+					continue;
+				}
+
+				if ( $result[0]->cnt == $result[0]->max ) {
 					continue;
 				}
 
@@ -726,7 +743,11 @@ class Hicpo {
 				);
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
 				$result = $wpdb->get_results( $query );
-				if ( 0 == $result[0]->cnt || $result[0]->cnt == $result[0]->max ) {
+				if ( 0 == $result[0]->cnt ) {
+					continue;
+				}
+
+				if ( $result[0]->cnt == $result[0]->max ) {
 					continue;
 				}
 
@@ -812,7 +833,7 @@ class Hicpo {
 		}
 
 		if ( isset( $post->post_type ) && in_array( $post->post_type, $objects ) ) {
-			$orderby = 'ORDER BY p.menu_order ASC LIMIT 1';
+			return 'ORDER BY p.menu_order ASC LIMIT 1';
 		}
 
 		return $orderby;
@@ -843,7 +864,7 @@ class Hicpo {
 		}
 
 		if ( isset( $post->post_type ) && in_array( $post->post_type, $objects ) ) {
-			$orderby = 'ORDER BY p.menu_order DESC LIMIT 1';
+			return 'ORDER BY p.menu_order DESC LIMIT 1';
 		}
 
 		return $orderby;
@@ -1019,13 +1040,19 @@ class Hicpo {
 
 			$new = [];
 			foreach ( $sites as $site ) {
-				if (
-					isset( $site->blog_id ) &&
-					isset( $blog_list[ $site->blog_id ] ) &&
-					is_object( $blog_list[ $site->blog_id ] )
-				) {
-					$new[] = $blog_list[ $site->blog_id ];
+				if ( ! isset( $site->blog_id ) ) {
+					continue;
 				}
+
+				if ( ! isset( $blog_list[ $site->blog_id ] ) ) {
+					continue;
+				}
+
+				if ( ! is_object( $blog_list[ $site->blog_id ] ) ) {
+					continue;
+				}
+
+				$new[] = $blog_list[ $site->blog_id ];
 			}
 		} else {
 			$sites = get_sites( [ 'limit' => 9999 ] );
@@ -1043,13 +1070,19 @@ class Hicpo {
 
 			$new = [];
 			foreach ( $sites as $site ) {
-				if (
-					isset( $site['blog_id'] ) &&
-					isset( $blog_list[ $site['blog_id'] ] ) &&
-					is_object( $blog_list[ $site['blog_id'] ] )
-				) {
-					$new[] = $blog_list[ $site['blog_id'] ];
+				if ( ! isset( $site['blog_id'] ) ) {
+					continue;
 				}
+
+				if ( ! isset( $blog_list[ $site['blog_id'] ] ) ) {
+					continue;
+				}
+
+				if ( ! is_object( $blog_list[ $site['blog_id'] ] ) ) {
+					continue;
+				}
+
+				$new[] = $blog_list[ $site['blog_id'] ];
 			}
 		}
 
