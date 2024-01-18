@@ -22,6 +22,8 @@
 	},
 	"scripts": {
 		"php:lint": "vendor/bin/phpcs --standard=phpcs.xml --ignore=rector.php .",
-		"php:lint:fix": "vendor/bin/phpcbf --standard=phpcs.xml --ignore=rector.php ."
+		"php:lint:fix": "vendor/bin/phpcbf --standard=phpcs.xml --ignore=rector.php .",
+		"rector": "vendor/bin/rector",
+		"rector:dry-run": "vendor/bin/rector --dry-run"
 	}
 }
