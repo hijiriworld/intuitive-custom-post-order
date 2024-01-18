@@ -1,8 +1,8 @@
 <?php
 
 $hicpo_options = get_option( 'hicpo_options' );
-$hicpo_objects = isset( $hicpo_options['objects'] ) ? $hicpo_options['objects'] : [];
-$hicpo_tags = isset( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : [];
+$hicpo_objects = $hicpo_options['objects'] ?? [];
+$hicpo_tags = $hicpo_options['tags'] ?? [];
 
 ?>
 

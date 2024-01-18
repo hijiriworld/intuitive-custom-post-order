@@ -78,7 +78,7 @@ class Hicpo {
 	 * Construct
 	 */
 	public function __construct() {
-		 // activation
+		// activation
 		$hicpo_ver = get_option( 'hicpo_ver' );
 		if ( version_compare( $hicpo_ver, HICPO_VER ) < 0 ) {
 			$this->hicpo_activation();
@@ -879,7 +879,7 @@ class Hicpo {
 				}
 				// post
 			} elseif ( in_array( 'post', $objects ) ) {
-					$active = true;
+				$active = true;
 			}
 
 			if ( ! $active ) {
@@ -949,10 +949,7 @@ class Hicpo {
 	}
 
 	private function hicpo_taxcmp( $a, $b ) {
-		if ( $a->term_order == $b->term_order ) {
-			return 0;
-		}
-		return ( $a->term_order < $b->term_order ) ? -1 : 1;
+		return $a->term_order <=> $b->term_order;
 	}
 
 	public function hicpo_sites_clauses( $pieces = [] ) {
@@ -969,7 +966,7 @@ class Hicpo {
 				return $pieces;
 			}
 		} elseif ( ! get_option( 'hicpo_network_sites' ) ) {
-				return $pieces;
+			return $pieces;
 		}
 
 		global $wp_version;
@@ -992,7 +989,7 @@ class Hicpo {
 				return $blogs;
 			}
 		} elseif ( ! get_option( 'hicpo_network_sites' ) ) {
-				return $blogs;
+			return $blogs;
 		}
 		global $wpdb, $wp_version;
 
@@ -1048,7 +1045,7 @@ class Hicpo {
 
 	/* before wp v4.6.0 */
 	public function hicpo_refresh_front_network() {
-		 global $wp_version;
+		global $wp_version;
 		if ( version_compare( $wp_version, '4.6.0' ) < 0 ) {
 			global $blog_id;
 			if ( 1 != $blog_id ) {
@@ -1058,7 +1055,7 @@ class Hicpo {
 					return;
 				}
 			} elseif ( ! get_option( 'hicpo_network_sites' ) ) {
-					return;
+				return;
 			}
 			add_filter( 'query', [ $this, 'hicpo_refresh_front_network_2' ] );
 		}
@@ -1083,12 +1080,12 @@ class Hicpo {
 	}
 
 	public function hicpo_get_options_objects() {
-		$hicpo_options = get_option( 'hicpo_options' ) ? get_option( 'hicpo_options' ) : [];
+		$hicpo_options = get_option( 'hicpo_options' ) ?: [];
 		$objects = isset( $hicpo_options['objects'] ) && is_array( $hicpo_options['objects'] ) ? $hicpo_options['objects'] : [];
 		return $objects;
 	}
 	public function hicpo_get_options_tags() {
-		$hicpo_options = get_option( 'hicpo_options' ) ? get_option( 'hicpo_options' ) : [];
+		$hicpo_options = get_option( 'hicpo_options' ) ?: [];
 		$tags = isset( $hicpo_options['tags'] ) && is_array( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : [];
 		return $tags;
 	}
