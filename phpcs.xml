@@ -51,6 +51,11 @@
     <!-- Disallow long array syntax -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax" />
 
+    <!-- Exclude DisallowShortTernary -->
+    <rule ref="Universal.Operators.DisallowShortTernary.Found">
+        <exclude name="Universal.Operators.DisallowShortTernary.Found" />
+    </rule>
+
     <!-- Don't align equal signs -->
     <rule ref="Generic.Formatting.MultipleStatementAlignment.NotSameWarning">
         <exclude name="Generic.Formatting.MultipleStatementAlignment.NotSameWarning" />
@@ -86,4 +91,5 @@
     <rule ref="WordPress.Files.FileName.InvalidClassFileName">
         <exclude-pattern>intuitive-custom-post-order.php</exclude-pattern>
     </rule>
+
 </ruleset>

@@ -16,10 +16,12 @@
 	"require-dev": {
 		"wp-coding-standards/wpcs": "^3.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-		"phpcompatibility/phpcompatibility-wp": "^2.1"
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"rector/rector": "^0.19.1",
+		"php-stubs/wordpress-stubs": "^6.4"
 	},
 	"scripts": {
-		"php:lint": "vendor/bin/phpcs --standard=phpcs.xml .",
-		"php:lint:fix": "vendor/bin/phpcbf --standard=phpcs.xml ."
+		"php:lint": "vendor/bin/phpcs --standard=phpcs.xml --ignore=rector.php .",
+		"php:lint:fix": "vendor/bin/phpcbf --standard=phpcs.xml --ignore=rector.php ."
 	}
 }
