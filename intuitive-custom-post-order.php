@@ -31,8 +31,8 @@ function hicpo_uninstall() {
 	global $wpdb;
 	if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 		$blogids = $wpdb->get_col( 'SELECT blog_id FROM ' . $wpdb->blogs );
-		foreach ( $blogids as $blog_id ) {
-			switch_to_blog( $blog_id );
+		foreach ( $blogids as $blogid ) {
+			switch_to_blog( $blogid );
 			hicpo_uninstall_db_terms();
 		}
 
@@ -325,7 +325,7 @@ class Hicpo {
 		}
 
 		if ( ! empty( $tags ) ) {
-			foreach ( $tags as $taxonomy ) {
+			foreach ( $tags as $tag ) {
 				$query = $wpdb->prepare(
 					"
 					SELECT count(*) as cnt, max(term_order) as max, min(term_order) as min
@@ -333,7 +333,7 @@ class Hicpo {
 					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
 					WHERE term_taxonomy.taxonomy = %s
 				",
-					$taxonomy
+					$tag
 				);
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
 				$result = $wpdb->get_results( $query );
@@ -350,7 +350,7 @@ class Hicpo {
 					WHERE term_taxonomy.taxonomy = %s
 					ORDER BY term_order ASC
 				",
-					$taxonomy
+					$tag
 				);
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
 				$results = $wpdb->get_results( $query );
@@ -428,9 +428,9 @@ class Hicpo {
 
 		// get objects per now page
 		$id_arr = [];
-		foreach ( $data as $key => $values ) {
-			foreach ( $values as $position => $id ) {
-				$id_arr[] = $id;
+		foreach ( $data as $values ) {
+			foreach ( $values as $value ) {
+				$id_arr[] = $value;
 			}
 		}
 
@@ -438,7 +438,7 @@ class Hicpo {
 
 		// get menu_order of objects per now page
 		$menu_order_arr = [];
-		foreach ( $id_arr as $key => $id ) {
+		foreach ( $id_arr as $id ) {
 			$results = $wpdb->get_results( sprintf( 'SELECT menu_order FROM %s WHERE ID = ', $wpdb->posts ) . (int) $id );
 			foreach ( $results as $result ) {
 				$menu_order_arr[] = $result->menu_order;
@@ -448,7 +448,7 @@ class Hicpo {
 		// maintains key association = no
 		sort( $menu_order_arr );
 
-		foreach ( $data as $key => $values ) {
+		foreach ( $data as $values ) {
 			foreach ( $values as $position => $id ) {
 				$wpdb->update( $wpdb->posts, [ 'menu_order' => $menu_order_arr[ $position ] ], [ 'ID' => (int) $id ] );
 			}
@@ -478,7 +478,7 @@ class Hicpo {
 			);
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
 			$results = $wpdb->get_results( $query );
-			foreach ( $results as $key => $result ) {
+			foreach ( $results as $result ) {
 				$view_posi = array_search( $result->ID, $id_arr, true );
 				if ( false === $view_posi ) {
 					$view_posi = 999;
@@ -490,9 +490,9 @@ class Hicpo {
 
 			ksort( $sort_ids );
 			$oreder_no = 0;
-			foreach ( $sort_ids as $key => $id ) {
+			foreach ( $sort_ids as $sort_id ) {
 				$oreder_no = ++$oreder_no;
-				$wpdb->update( $wpdb->posts, [ 'menu_order' => $oreder_no ], [ 'ID' => (int) $id ] );
+				$wpdb->update( $wpdb->posts, [ 'menu_order' => $oreder_no ], [ 'ID' => (int) $sort_id ] );
 			}
 		}
 	}
@@ -523,16 +523,16 @@ class Hicpo {
 		}
 
 		$id_arr = [];
-		foreach ( $data as $key => $values ) {
-			foreach ( $values as $position => $id ) {
-				$id_arr[] = $id;
+		foreach ( $data as $values ) {
+			foreach ( $values as $value ) {
+				$id_arr[] = $value;
 			}
 		}
 
 		global $wpdb;
 
 		$menu_order_arr = [];
-		foreach ( $id_arr as $key => $id ) {
+		foreach ( $id_arr as $id ) {
 			$results = $wpdb->get_results( sprintf( 'SELECT term_order FROM %s WHERE term_id = ', $wpdb->terms ) . (int) $id );
 			foreach ( $results as $result ) {
 				$menu_order_arr[] = $result->term_order;
@@ -541,7 +541,7 @@ class Hicpo {
 
 		sort( $menu_order_arr );
 
-		foreach ( $data as $key => $values ) {
+		foreach ( $data as $values ) {
 			foreach ( $values as $position => $id ) {
 				$wpdb->update( $wpdb->terms, [ 'term_order' => $menu_order_arr[ $position ] ], [ 'term_id' => (int) $id ] );
 			}
@@ -577,7 +577,7 @@ class Hicpo {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
 			$results = $wpdb->get_results( $query );
 
-			foreach ( $results as $key => $result ) {
+			foreach ( $results as $result ) {
 				$view_posi = array_search( $result->term_id, $id_arr, true );
 				if ( false === $view_posi ) {
 					$view_posi = 999;
@@ -589,9 +589,9 @@ class Hicpo {
 
 			ksort( $sort_ids );
 			$oreder_no = 0;
-			foreach ( $sort_ids as $key => $id ) {
+			foreach ( $sort_ids as $sort_id ) {
 				$oreder_no = ++$oreder_no;
-				$wpdb->update( $wpdb->terms, [ 'term_order' => $oreder_no ], [ 'term_id' => $id ] );
+				$wpdb->update( $wpdb->terms, [ 'term_order' => $oreder_no ], [ 'term_id' => $sort_id ] );
 			}
 		}
 	}
@@ -622,15 +622,15 @@ class Hicpo {
 		}
 
 		$id_arr = [];
-		foreach ( $data as $key => $values ) {
-			foreach ( $values as $position => $id ) {
-				$id_arr[] = $id;
+		foreach ( $data as $values ) {
+			foreach ( $values as $value ) {
+				$id_arr[] = $value;
 			}
 		}
 
 		global $wpdb;
 
-		foreach ( $data as $key => $values ) {
+		foreach ( $data as $values ) {
 			foreach ( $values as $position => $id ) {
 				$wpdb->update( $wpdb->blogs, [ 'menu_order' => $position + 1 ], [ 'blog_id' => (int) $id ] );
 			}
@@ -714,7 +714,7 @@ class Hicpo {
 		}
 
 		if ( ! empty( $tags ) ) {
-			foreach ( $tags as $taxonomy ) {
+			foreach ( $tags as $tag ) {
 				$query = $wpdb->prepare(
 					"
 					SELECT count(*) as cnt, max(term_order) as max, min(term_order) as min
@@ -722,7 +722,7 @@ class Hicpo {
 					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
 					WHERE term_taxonomy.taxonomy = %s
 				",
-					$taxonomy
+					$tag
 				);
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
 				$result = $wpdb->get_results( $query );
@@ -738,7 +738,7 @@ class Hicpo {
 					WHERE term_taxonomy.taxonomy = %s
 					ORDER BY name ASC
 				",
-					$taxonomy
+					$tag
 				);
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
 				$results = $wpdb->get_results( $query );
@@ -942,7 +942,7 @@ class Hicpo {
 			return $terms;
 		}
 
-		foreach ( $terms as $key => $term ) {
+		foreach ( $terms as $term ) {
 			if ( is_object( $term ) && isset( $term->taxonomy ) ) {
 				$taxonomy = $term->taxonomy;
 				if ( ! in_array( $taxonomy, $tags ) ) {
@@ -1006,49 +1006,49 @@ class Hicpo {
 		if ( version_compare( $wp_version, '4.6.0' ) >= 0 ) {
 			$sites = get_sites( [] );
 			$sort_keys = [];
-			foreach ( $sites as $k => $v ) {
+			foreach ( $sites as $v ) {
 				$sort_keys[] = $v->menu_order;
 			}
 
 			array_multisort( $sort_keys, SORT_ASC, $sites );
 
 			$blog_list = [];
-			foreach ( $blogs as $k => $v ) {
-				$blog_list[ $v->userblog_id ] = $v;
+			foreach ( $blogs as $blog ) {
+				$blog_list[ $blog->userblog_id ] = $blog;
 			}
 
 			$new = [];
-			foreach ( $sites as $k => $v ) {
+			foreach ( $sites as $site ) {
 				if (
-					isset( $v->blog_id ) &&
-					isset( $blog_list[ $v->blog_id ] ) &&
-					is_object( $blog_list[ $v->blog_id ] )
+					isset( $site->blog_id ) &&
+					isset( $blog_list[ $site->blog_id ] ) &&
+					is_object( $blog_list[ $site->blog_id ] )
 				) {
-					$new[] = $blog_list[ $v->blog_id ];
+					$new[] = $blog_list[ $site->blog_id ];
 				}
 			}
 		} else {
 			$sites = get_sites( [ 'limit' => 9999 ] );
 			$sort_keys = [];
-			foreach ( $sites as $k => $v ) {
+			foreach ( $sites as $v ) {
 				$sort_keys[] = $v['menu_order'];
 			}
 
 			array_multisort( $sort_keys, SORT_ASC, $sites );
 
 			$blog_list = [];
-			foreach ( $blogs as $k => $v ) {
-				$blog_list[ $v->userblog_id ] = $v;
+			foreach ( $blogs as $blog ) {
+				$blog_list[ $blog->userblog_id ] = $blog;
 			}
 
 			$new = [];
-			foreach ( $sites as $k => $v ) {
+			foreach ( $sites as $site ) {
 				if (
-					isset( $v['blog_id'] ) &&
-					isset( $blog_list[ $v['blog_id'] ] ) &&
-					is_object( $blog_list[ $v['blog_id'] ] )
+					isset( $site['blog_id'] ) &&
+					isset( $blog_list[ $site['blog_id'] ] ) &&
+					is_object( $blog_list[ $site['blog_id'] ] )
 				) {
-					$new[] = $blog_list[ $v['blog_id'] ];
+					$new[] = $blog_list[ $site['blog_id'] ];
 				}
 			}
 		}
