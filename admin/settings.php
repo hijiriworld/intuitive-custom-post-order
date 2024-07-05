@@ -1,8 +1,8 @@
 <?php
 
 $hicpo_options = get_option( 'hicpo_options' );
-$hicpo_objects = isset( $hicpo_options['objects'] ) ? $hicpo_options['objects'] : [];
-$hicpo_tags = isset( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : [];
+$hicpo_objects = $hicpo_options['objects'] ?? [];
+$hicpo_tags = $hicpo_options['tags'] ?? [];
 
 ?>
 
@@ -14,9 +14,13 @@ $hicpo_tags = isset( $hicpo_options['tags'] ) ? $hicpo_options['tags'] : [];
 <div id="message" class="updated below-h2">
 	<?php if ( 'update' === $_GET['msg'] ) : ?>
 		<p><?php esc_html_e( 'Settings saved.' ); ?></p>
-	<?php endif; ?>
+		<?php
+	endif;
+	?>
 </div>
-<?php endif; ?>
+	<?php
+endif;
+?>
 
 <form method="post">
 
@@ -48,9 +52,8 @@ if ( function_exists( 'wp_nonce_field' ) ) {
 					?>
 					<label><input type="checkbox" name="objects[]" value="<?php echo esc_html( $post_type->name ); ?>"
 					<?php
-					if ( isset( $hicpo_objects ) && is_array( $hicpo_objects ) ) {
-						if ( in_array( $post_type->name, $hicpo_objects ) ) {
-							echo 'checked="checked"'; }
+					if ( isset( $hicpo_objects ) && is_array( $hicpo_objects ) && in_array( $post_type->name, $hicpo_objects ) ) {
+						echo 'checked="checked"';
 					}
 					?>
 					>&nbsp;<?php echo esc_html( $post_type->label ); ?></label><br>
@@ -88,9 +91,8 @@ if ( function_exists( 'wp_nonce_field' ) ) {
 					?>
 					<label><input type="checkbox" name="tags[]" value="<?php echo esc_html( $taxonomy->name ); ?>"
 					<?php
-					if ( isset( $hicpo_tags ) && is_array( $hicpo_tags ) ) {
-						if ( in_array( $taxonomy->name, $hicpo_tags ) ) {
-							echo 'checked="checked"'; }
+					if ( isset( $hicpo_tags ) && is_array( $hicpo_tags ) && in_array( $taxonomy->name, $hicpo_tags ) ) {
+						echo 'checked="checked"';
 					}
 					?>
 					>&nbsp;<?php echo esc_html( $taxonomy->label ); ?></label><br>

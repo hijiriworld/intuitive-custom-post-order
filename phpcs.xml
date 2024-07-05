@@ -32,7 +32,7 @@
     <arg name="extensions" value="php"/>
 
     <!-- Check for PHP cross-version compatibility. -->
-    <config name="testVersion" value="7.0-"/>
+    <config name="testVersion" value="7.4-"/>
     <rule ref="PHPCompatibilityWP"/>
 
     <!-- Check for WordPress cross-version compatibility. -->
@@ -50,6 +50,11 @@
 
     <!-- Disallow long array syntax -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax" />
+
+    <!-- Exclude DisallowShortTernary -->
+    <rule ref="Universal.Operators.DisallowShortTernary.Found">
+        <exclude name="Universal.Operators.DisallowShortTernary.Found" />
+    </rule>
 
     <!-- Don't align equal signs -->
     <rule ref="Generic.Formatting.MultipleStatementAlignment.NotSameWarning">
@@ -86,4 +91,5 @@
     <rule ref="WordPress.Files.FileName.InvalidClassFileName">
         <exclude-pattern>intuitive-custom-post-order.php</exclude-pattern>
     </rule>
+
 </ruleset>
