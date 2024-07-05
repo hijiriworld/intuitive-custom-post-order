@@ -880,7 +880,7 @@ class Hicpo {
 		if ( is_admin() ) {
 
 			// adminの場合 $wp_query->query['post_type']=post も渡される
-			if ( isset( $wp_query->query['post_type'] ) && ! isset( $_GET['orderby'] ) && in_array( $wp_query->query['post_type'], $objects ) ) {
+			if ( isset( $wp_query->query['post_type'] ) && ! $wp_query->get( 'orderby' ) && in_array( $wp_query->query['post_type'], $objects ) ) {
 				$wp_query->set( 'orderby', 'menu_order' );
 				$wp_query->set( 'order', 'ASC' );
 			}
