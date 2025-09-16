@@ -1,22 +1,26 @@
 # Intuitive Custom Post Order
 
-Intuitive Custom Post Order is WordPress Plugin that order items using a drag and drop sortable JavaScript.
-
 ## Description
 
-Intuitively, order items (Posts, Pages, Custom Post Types, Custom Taxonomies, Sites) using a drag and drop sortable JavaScript.
+Intuitively reorder Posts, Pages, Custom Post Types, Taxonomies, and Sites with a simple drag-and-drop interface.
 
-Select sortable items from 'Intuitive CPO' menu of Setting menu in WordPress.
+Intuitive Custom Post Order lets you reorder items with simple drag and drop in the WordPress admin.  
+You can sort Posts, Pages, Custom Post Types, Taxonomies, and (on Multisite) Sites.
 
-In addition, You can re-override the parameters of `orderby` and `order`, by using the `WP_Query` or `pre_get_posts` or `query_posts()` or `get_posts()`.
+Go to **Settings → Intuitive CPO** and select which content types you want to make sortable.  
+Once enabled, just drag and drop items in the list tables—no extra setup is required.
 
-**Attention**: Only if you use `get_posts()` to re-overwrite to the default order (`orderby=date, order=DESC`), You need to use own custom parameter `orderby=default_date`.
+If you create custom queries in your theme or plugins, set `orderby=menu_order` and `order=ASC` to respect the drag-and-drop order.  
+To keep the default WordPress order (by date), explicitly set `orderby=date` and `order=DESC`.
+
+Source code and development are available on [GitHub](https://github.com/hijiriworld/intuitive-custom-post-order).
 
 ## Installation
 
-1. Upload 'intuitive-custom-post-order' folder to the `/wp-content/plugins/` directory.
+1. Upload the 'intuitive-custom-post-order' folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Select sortable items from 'Intuitive CPO' menu of Setting menu in WordPress.
+3. Go to **Settings → Intuitive CPO** and choose which post types or taxonomies you want to make sortable.
+4. Simply drag and drop items in the list tables to reorder them.
 
 ## Local development
 

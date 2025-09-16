@@ -36,7 +36,7 @@ if ( function_exists( 'wp_nonce_field' ) ) {
 </table>
 
 <p class="submit">
-	<input type="submit" class="button-primary" name="hicpo_network_submit" value="<?php esc_html_e( 'Update', 'cptg' ); ?>">
+	<input type="submit" class="button-primary" name="hicpo_network_submit" value="<?php esc_attr_e( 'Update', 'intuitive-custom-post-order' ); ?>">
 </p>
 
 </form>

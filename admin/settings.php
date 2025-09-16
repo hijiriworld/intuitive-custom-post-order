@@ -46,7 +46,7 @@ if ( function_exists( 'wp_nonce_field' ) ) {
 						continue;
 					}
 					?>
-					<label><input type="checkbox" name="objects[]" value="<?php echo esc_html( $post_type->name ); ?>"
+					<label><input type="checkbox" name="objects[]" value="<?php echo esc_attr( $post_type->name ); ?>"
 					<?php
 					if ( isset( $hicpo_objects ) && is_array( $hicpo_objects ) ) {
 						if ( in_array( $post_type->name, $hicpo_objects ) ) {
@@ -86,7 +86,7 @@ if ( function_exists( 'wp_nonce_field' ) ) {
 						continue;
 					}
 					?>
-					<label><input type="checkbox" name="tags[]" value="<?php echo esc_html( $taxonomy->name ); ?>"
+					<label><input type="checkbox" name="tags[]" value="<?php echo esc_attr( $taxonomy->name ); ?>"
 					<?php
 					if ( isset( $hicpo_tags ) && is_array( $hicpo_tags ) ) {
 						if ( in_array( $taxonomy->name, $hicpo_tags ) ) {
@@ -107,7 +107,7 @@ if ( function_exists( 'wp_nonce_field' ) ) {
 <label><input type="checkbox" id="hicpo_allcheck_tags"> <?php esc_html_e( 'All Check', 'intuitive-custom-post-order' ); ?></label>
 
 <p class="submit">
-	<input type="submit" class="button-primary" name="hicpo_submit" value="<?php esc_html_e( 'Update' ); ?>">
+	<input type="submit" class="button-primary" name="hicpo_submit" value="<?php esc_attr_e( 'Update', 'intuitive-custom-post-order' ); ?>">
 </p>
 
 </form>

@@ -3,103 +3,146 @@ Contributors: hijiri
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TT5NP352P6MCU
 Tags: post order, posts order, order post, order posts, custom post type order, custom taxonomy order
 Requires at least: 3.5.0
-Tested up to: 6.4.2
-Stable tag: 3.1.5.1
+Tested up to: 6.8.2
+Stable tag: 3.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Intuitively, order items( Posts, Pages, Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
-
 == Description ==
 
-Select sortable items from 'Intuitive CPO' menu of Setting menu in WordPress.
-Intuitively, order items( Posts, Pages, Custom Post Types, Custom Taxonomies, Sites ) using a drag and drop sortable JavaScript.
-Use parameters( orderby = menu_order, order = ASC ) in your theme.
+Intuitively reorder Posts, Pages, Custom Post Types, Taxonomies, and Sites with a simple drag-and-drop interface.
 
-You can also override the auto-converted parameters( orderby and order ).
-ATTENTION: Only if you use 'get_posts()' to re-overwrite to the default order( orderby = date, order = DESC ), You need to use own custom parameter 'orderby = default_date'.
+Intuitive Custom Post Order lets you reorder items with simple drag and drop in the WordPress admin.  
+You can sort Posts, Pages, Custom Post Types, Taxonomies, and (on Multisite) Sites.
 
-This Plugin published on <a href="https://github.com/hijiriworld/intuitive-custom-post-order">GitHub.</a>
+Go to **Settings → Intuitive CPO** and select which content types you want to make sortable.  
+Once enabled, just drag and drop items in the list tables—no extra setup is required.
+
+If you create custom queries in your theme or plugins, set `orderby=menu_order` and `order=ASC` to respect the drag-and-drop order.  
+To keep the default WordPress order (by date), explicitly set `orderby=date` and `order=DESC`.
+
+Source code and development are available on [GitHub](https://github.com/hijiriworld/intuitive-custom-post-order).
 
 == Installation ==
 
-1. Upload 'intuitive-custom-post-order' folder to the `/wp-content/plugins/` directory.
+1. Upload the 'intuitive-custom-post-order' folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Select sortable items from 'Intuitive CPO' menu of Setting menu in WordPress.
-
-== Screenshots ==
-
-1. Settings
-2. Reorder Posts
-3. Reorder Taxonomies
-4. ( for Multisite ) Network Settings
-5. ( for Multisite ) Reorder Sites
+3. Go to **Settings → Intuitive CPO** and choose which post types or taxonomies you want to make sortable.
+4. Simply drag and drop items in the list tables to reorder them.
 
 == Frequently Asked Questions ==
 
-= How to re-override the parameters of 'orderby' and 'order' =
+= Do I need to change my theme to make ordering work? =
 
-<strong>Sub query</strong>
+No. After activation, items are sortable in the admin UI, and front-end queries for enabled post types are ordered by `menu_order ASC` automatically—unless you explicitly pass your own `orderby`.
 
-By using the 'WP_Query', you can re-override the parameters.
+= How do I make my custom query respect the drag-and-drop order? =
 
-WP_Query
+Specify `orderby=menu_order` and `order=ASC` in your query args.
 
-`
-<?php $query = new WP_Query( array(
-	'orderby' => 'ID',
-	'order' => 'DESC',
-) ) ?>
-`
-
-get_posts()
+WP_Query:
 
 `
-<?php $query = get_posts( array(
-	'orderby' => 'title',
-) ) ?>
+<?php
+new WP_Query( array(
+    'post_type' => 'your_cpt',
+    'orderby'   => 'menu_order',
+    'order'     => 'ASC',
+) );
+?>
 `
 
-ATTENTION: Only if you use 'get_posts()' to re-overwrite to the default order( orderby=date, order=DESC ), You need to use own custom parameter 'orderby=default_date'.
+get_posts():
 
 `
-<?php $query = get_posts( array(
-	'orderby' => 'default_date',
-	'order' => 'DESC',
-) ) ?>
+<?php
+get_posts( array(
+    'post_type' => 'your_cpt',
+    'orderby'   => 'menu_order',
+    'order'     => 'ASC',
+) );
+?>
 `
 
-<strong>Main query</strong>
+= I want date order (newest first) for a specific query. How? =
 
-By using the 'pre_get_posts' action hook or 'query_posts()', you can re-override the parameters.
-
-pre_get_posts
+Explicitly set:
 
 `
-function my_filter( $query )
-{
-	if ( is_admin() || !$query->is_main_query() ) return;
-	if ( is_home() ) {
-		$query->set( 'orderby', 'date' );
-		$query->set( 'order', 'DESC' );
-		return;
-	}
-}
-add_action( 'pre_get_posts', 'my_filter' );
+<?php
+new WP_Query( array(
+    'orderby' => 'date',
+    'order'   => 'DESC',
+) );
+?>
 `
 
-query_posts()
+For get_posts(), the plugin supports a small switch:
 
 `
-<?php query_posts( array(
-	'orderby' => 'rand'
-) ); ?>
+<?php
+get_posts( array(
+    'orderby' => 'default_date',
+    'order'   => 'DESC',
+) );
+?>
 `
-= How to move post of second page in top of first page. =
 
-Go to "screen options" and change "Number of items per page:".
+= Is query_posts() supported? =
+
+`query_posts()` is discouraged by WordPress core because it alters the main query in a fragile way.  
+Use `pre_get_posts` (recommended) or `WP_Query` instead.
+
+Example with pre_get_posts to force date order on the main blog page:
+
+`
+<?php
+add_action( 'pre_get_posts', function( $q ) {
+    if ( is_admin() || ! $q->is_main_query() ) {
+        return;
+    }
+    if ( is_home() ) {
+        $q->set( 'orderby', 'date' );
+        $q->set( 'order', 'DESC' );
+    }
+} );
+?>
+`
+
+= Does this work with taxonomies and terms? =
+
+Yes. For enabled taxonomies, terms can be reordered and are returned in that order on the front end.  
+When you build custom term queries, make sure you don’t override the order unless you intend to.
+
+= Multisite: can I reorder Sites in Network Admin? =
+
+Yes. When enabled in Network settings, Sites are ordered by `menu_order ASC`. Drag & drop in Network Admin updates the order.
+
+= How can I move a post from the second page to the top of the first page? =
+
+Go to the "Screen Options" tab at the top right of the list table and increase the "Number of items per page".  
+This way, all items you want to reorder will appear on the same page and can be dragged to the desired position.
+
+== Screenshots ==
+
+1. Settings screen (choose sortable post types and taxonomies).
+2. Reordering posts with drag and drop.
+3. Reordering taxonomy terms.
+4. Network settings (for Multisite).
+5. Reordering Sites in Network Admin (for Multisite).
 
 == Changelog ==
+
+= 3.2.0 =
+
+* Security hardening: unified CSRF/nonces, capability checks, and standardized JSON responses in all AJAX handlers.
+* Network admin: switched to `manage_network_options` capability and `*_site_option` APIs for multisite settings.
+* Improved redirect handling: use `admin_url()` / `network_admin_url()` and ensure `exit;` after redirects.
+* Input sanitization: strengthened handling of `$_GET`, `$_POST`, and `$_SERVER` values with strict comparisons.
+* Code refactoring: replaced custom version parsing with `get_file_data()`, cleaned up `pre_get_posts` return values.
+* JavaScript: improved sortable behavior with clear success/failure feedback, disabled UI while saving, and accessibility notifications via `wp.a11y.speak`.
+* UI/UX: added saving indicator (semi-transparent rows + central spinner) during drag & drop reorder operations.
+* WordPress compatibility: tested up to WP 6.4+ and aligned with WordPress Coding Standards (WPCS).
 
 = 3.1.5.1 =
 

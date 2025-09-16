@@ -3,7 +3,7 @@
  * Plugin Name: Intuitive Custom Post Order
  * Plugin URI:  http://hijiriworld.com/web/plugins/intuitive-custom-post-order/
  * Description: Intuitively, Order Items (Posts, Pages, ,Custom Post Types, Custom Taxonomies, Sites) using a Drag and Drop Sortable JavaScript.
- * Version:     3.1.5.1
+ * Version:     3.2.0
  * Author:      hijiri
  * Author URI:  http://hijiriworld.com/web/
  * Text Domain: intuitive-custom-post-order
@@ -17,11 +17,9 @@
  */
 define( 'HICPO_URL', plugins_url( '', __FILE__ ) );
 define( 'HICPO_DIR', plugin_dir_path( __FILE__ ) );
-
-$plugin_file = file_get_contents( __FILE__ );
-preg_match( '/Version:\s*([^\s]+)/i', $plugin_file, $version_matches );
-$plugin_version = $version_matches[1];
-define( 'HICPO_VER', $plugin_version );
+// Get version from plugin header safely.
+$plugin_data = get_file_data( __FILE__, [ 'Version' => 'Version' ] );
+define( 'HICPO_VER', isset( $plugin_data['Version'] ) ? $plugin_data['Version'] : '0.0.0' );
 
 /**
  * Uninstall hook
@@ -195,9 +193,9 @@ class Hicpo {
 	public function hicpo_network_admin_menu() {
 		add_submenu_page(
 			'settings.php',
-			__( 'Intuitive CPO', 'hicpo' ),
-			__( 'Intuitive CPO', 'hicpo' ),
-			'manage_options',
+			__( 'Intuitive CPO', 'intuitive-custom-post-order' ),
+			__( 'Intuitive CPO', 'intuitive-custom-post-order' ),
+			'manage_network_options',
 			'hicpo-network-settings',
 			[ $this, 'hicpo_network_admin_page' ]
 		);
@@ -216,12 +214,12 @@ class Hicpo {
 			return false;
 		}
 
-		// multisite > sites
+		// multisite > sites	
 		if (
 			function_exists( 'is_multisite' )
 			&& is_multisite()
-			&& 'sites.php' == $pagenow
-			&& get_option( 'hicpo_network_sites' )
+			&& 'sites.php' === $pagenow
+			&& get_site_option( 'hicpo_network_sites' )
 		) {
 			return true;
 		}
@@ -248,24 +246,33 @@ class Hicpo {
 
 		if ( ! empty( $objects ) ) {
 			// page or custom post type
-			if ( isset( $_GET['post_type'] ) && ! isset( $_GET['taxonomy'] ) && in_array( $_GET['post_type'], $objects ) ) {
-				$active = true;
+			if ( isset( $_GET['post_type'] ) && ! isset( $_GET['taxonomy'] ) ) {
+				$pt = sanitize_key( wp_unslash( $_GET['post_type'] ) );
+				if ( in_array( $pt, $objects, true ) ) {
+					$active = true;
+				}
 			}
+
 
 			// post
 			if (
 				! isset( $_GET['post_type'] ) &&
+				isset( $_SERVER['REQUEST_URI'] ) &&
 				strstr( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'wp-admin/edit.php' ) &&
-				in_array( 'post', $objects )
+				in_array( 'post', $objects, true )
 			) {
 				$active = true;
 			}
 		}
 
 		if ( ! empty( $tags ) ) {
-			if ( isset( $_GET['taxonomy'] ) && in_array( $_GET['taxonomy'], $tags ) ) {
-				$active = true;
+			if ( isset( $_GET['taxonomy'] ) ) {
+				$tx = sanitize_key( wp_unslash( $_GET['taxonomy'] ) );
+				if ( in_array( $tx, $tags, true ) ) {
+					$active = true;
+				}
 			}
+
 		}
 
 		return $active;
@@ -277,7 +284,18 @@ class Hicpo {
 			wp_enqueue_script( 'jquery-ui-sortable' );
 
 			wp_enqueue_script( 'hicpojs', HICPO_URL . '/js/hicpo.js', [ 'jquery' ], HICPO_VER, true );
-			wp_localize_script( 'hicpojs', 'hicpojs_ajax_vars', [ 'nonce' => wp_create_nonce( 'hicpojs-ajax-nonce' ) ] );
+			wp_localize_script(
+				'hicpojs',
+				'hicpojs_ajax_vars',
+				[
+						'nonce'    => wp_create_nonce( 'hicpojs-ajax-nonce' ),
+						'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
+						'messages' => [
+						'saved'  => esc_html__( 'Order saved.', 'intuitive-custom-post-order' ),
+						'failed' => esc_html__( 'Failed to save the order.', 'intuitive-custom-post-order' ),
+					],
+				]
+			);
 
 			wp_enqueue_style( 'hicpo', HICPO_URL . '/css/hicpo.css', [], HICPO_VER );
 		}
@@ -382,7 +400,7 @@ class Hicpo {
 			}
 		}
 
-		$hicpo_network_sites = get_option( 'hicpo_network_sites' );
+		$hicpo_network_sites = get_site_option( 'hicpo_network_sites' );
 		if ( ! $hicpo_network_sites ) {
 			return $query;
 		}
@@ -401,35 +419,26 @@ class Hicpo {
 	}
 
 	public function hicpo_update_menu_order() {
-		if ( ! isset( $_POST['nonce'] ) ) {
-			return;
-		}
 
-		$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
-		if ( ! wp_verify_nonce( $nonce, 'hicpojs-ajax-nonce' ) ) {
-			return;
-		}
-
+		check_ajax_referer( 'hicpojs-ajax-nonce', 'nonce' );
 		if ( ! current_user_can( 'hicpo_update_menu_order' ) ) {
-			return;
+			wp_send_json_error( [ 'message' => __( 'You are not allowed to reorder posts.', 'intuitive-custom-post-order' ) ], 403 );
 		}
-
 		if ( ! isset( $_POST['order'] ) ) {
-			return;
+			wp_send_json_error( [ 'message' => __( 'Missing order payload.', 'intuitive-custom-post-order' ) ], 400 );
 		}
 
 		$order = sanitize_text_field( wp_unslash( $_POST['order'] ) );
 		parse_str( $order, $data );
-
 		if ( ! is_array( $data ) ) {
-			return false;
+			wp_send_json_error( [ 'message' => __( 'Invalid order payload.', 'intuitive-custom-post-order' ) ], 400 );
 		}
-
+		
 		// get objects per now page
 		$id_arr = [];
 		foreach ( $data as $key => $values ) {
 			foreach ( $values as $position => $id ) {
-				$id_arr[] = $id;
+				$id_arr[] = absint( $id );
 			}
 		}
 
@@ -438,7 +447,10 @@ class Hicpo {
 		// get menu_order of objects per now page
 		$menu_order_arr = [];
 		foreach ( $id_arr as $key => $id ) {
-			$results = $wpdb->get_results( "SELECT menu_order FROM $wpdb->posts WHERE ID = " . intval( $id ) );
+			$results = $wpdb->get_results( $wpdb->prepare(
+				"SELECT menu_order FROM $wpdb->posts WHERE ID = %d",
+				$id
+			) );
 			foreach ( $results as $result ) {
 				$menu_order_arr[] = $result->menu_order;
 			}
@@ -449,12 +461,21 @@ class Hicpo {
 
 		foreach ( $data as $key => $values ) {
 			foreach ( $values as $position => $id ) {
-				$wpdb->update( $wpdb->posts, [ 'menu_order' => $menu_order_arr[ $position ] ], [ 'ID' => intval( $id ) ] );
+				$wpdb->update(
+					$wpdb->posts,
+					[ 'menu_order' => isset( $menu_order_arr[ $position ] ) ? (int) $menu_order_arr[ $position ] : 0 ],
+					[ 'ID' => absint( $id ) ],
+					[ '%d' ],
+					[ '%d' ]
+				);
 			}
 		}
 
 		// same number check
-		$post_type = get_post_type( $id );
+		$last_id   = end( $id_arr );
+		$post_type = $last_id ? get_post_type( $last_id ) : 'post';
+		$sort_ids  = [];
+
 		$query = $wpdb->prepare(
 			"
 			SELECT COUNT(menu_order) AS mo_count, post_type, menu_order FROM $wpdb->posts
@@ -486,43 +507,41 @@ class Hicpo {
 				$sort_ids[ $sort_key ] = $result->ID;
 			}
 			ksort( $sort_ids );
-			$oreder_no = 0;
-			foreach ( $sort_ids as $key => $id ) {
-				$oreder_no = ++$oreder_no;
-				$wpdb->update( $wpdb->posts, [ 'menu_order' => $oreder_no ], [ 'ID' => intval( $id ) ] );
+
+			$order_no = 0;
+			foreach ( $sort_ids as $key => $pid ) {
+				$order_no++;
+				$wpdb->update(
+					$wpdb->posts,
+					[ 'menu_order' => $order_no ],
+					[ 'ID' => absint( $pid ) ],
+					[ '%d' ],
+					[ '%d' ]
+				);
 			}
+			wp_send_json_success( [ 'message' => __( 'Order updated.', 'intuitive-custom-post-order' ) ] );
 		}
 	}
 
 	public function hicpo_update_menu_order_tags() {
-		if ( ! isset( $_POST['nonce'] ) ) {
-			return;
-		}
-
-		$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
-		if ( ! wp_verify_nonce( $nonce, 'hicpojs-ajax-nonce' ) ) {
-			return;
-		}
-
+		check_ajax_referer( 'hicpojs-ajax-nonce', 'nonce' );
 		if ( ! current_user_can( 'hicpo_update_menu_order' ) ) {
-			return;
+			wp_send_json_error( [ 'message' => __( 'You are not allowed to reorder terms.', 'intuitive-custom-post-order' ) ], 403 );
 		}
-
 		if ( ! isset( $_POST['order'] ) ) {
-			return;
+			wp_send_json_error( [ 'message' => __( 'Missing order payload.', 'intuitive-custom-post-order' ) ], 400 );
 		}
 
 		$order = sanitize_text_field( wp_unslash( $_POST['order'] ) );
 		parse_str( $order, $data );
-
 		if ( ! is_array( $data ) ) {
-			return false;
+			wp_send_json_error( [ 'message' => __( 'Invalid order payload.', 'intuitive-custom-post-order' ) ], 400 );
 		}
-
+		
 		$id_arr = [];
 		foreach ( $data as $key => $values ) {
 			foreach ( $values as $position => $id ) {
-				$id_arr[] = $id;
+				$id_arr[] = absint( $id );
 			}
 		}
 
@@ -530,7 +549,12 @@ class Hicpo {
 
 		$menu_order_arr = [];
 		foreach ( $id_arr as $key => $id ) {
-			$results = $wpdb->get_results( "SELECT term_order FROM $wpdb->terms WHERE term_id = " . intval( $id ) );
+			$results = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT term_order FROM $wpdb->terms WHERE term_id = %d",
+					$id
+				)
+			);
 			foreach ( $results as $result ) {
 				$menu_order_arr[] = $result->term_order;
 			}
@@ -539,13 +563,28 @@ class Hicpo {
 
 		foreach ( $data as $key => $values ) {
 			foreach ( $values as $position => $id ) {
-				$wpdb->update( $wpdb->terms, [ 'term_order' => $menu_order_arr[ $position ] ], [ 'term_id' => intval( $id ) ] );
+				$wpdb->update(
+					$wpdb->terms,
+					[ 'term_order' => isset( $menu_order_arr[ $position ] ) ? (int) $menu_order_arr[ $position ] : 0 ],
+					[ 'term_id' => absint( $id ) ],
+					[ '%d' ],
+					[ '%d' ]
+				);
 			}
 		}
 
 		// same number check
-		$term = get_term( $id );
-		$taxonomy = $term->taxonomy;
+		$last_id = end( $id_arr );
+		$taxonomy = '';
+		if ( $last_id ) {
+			$term = get_term( $last_id );
+			if ( ! is_wp_error( $term ) && $term && isset( $term->taxonomy ) ) {
+				$taxonomy = $term->taxonomy;
+			}
+		}
+		if ( '' === $taxonomy ) {
+			wp_send_json_success( [ 'message' => __( 'Order updated.', 'intuitive-custom-post-order' ) ] );
+		}
 		$query = $wpdb->prepare(
 			"
 			SELECT COUNT(term_order) AS to_count, term_order
@@ -573,6 +612,7 @@ class Hicpo {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared.
 			$results = $wpdb->get_results( $query );
 
+			$sort_ids = [];
 			foreach ( $results as $key => $result ) {
 				$view_posi = array_search( $result->term_id, $id_arr, true );
 				if ( false === $view_posi ) {
@@ -582,43 +622,40 @@ class Hicpo {
 				$sort_ids[ $sort_key ] = $result->term_id;
 			}
 			ksort( $sort_ids );
-			$oreder_no = 0;
-			foreach ( $sort_ids as $key => $id ) {
-				$oreder_no = ++$oreder_no;
-				$wpdb->update( $wpdb->terms, [ 'term_order' => $oreder_no ], [ 'term_id' => $id ] );
+			$order_no = 0;
+			foreach ( $sort_ids as $key => $tid ) {
+				$order_no++;
+				$wpdb->update(
+					$wpdb->terms,
+					[ 'term_order' => $order_no ],
+					[ 'term_id' => absint( $tid ) ],
+					[ '%d' ],
+					[ '%d' ]
+				);
 			}
 		}
+		wp_send_json_success( [ 'message' => __( 'Order updated.', 'intuitive-custom-post-order' ) ] );
 	}
 
 	public function hicpo_update_menu_order_sites() {
-		if ( ! isset( $_POST['nonce'] ) ) {
-			return;
-		}
-
-		$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
-		if ( ! wp_verify_nonce( $nonce, 'hicpojs-ajax-nonce' ) ) {
-			return;
-		}
-
+		check_ajax_referer( 'hicpojs-ajax-nonce', 'nonce' );
 		if ( ! current_user_can( 'hicpo_update_menu_order_sites' ) ) {
-			return;
+			wp_send_json_error( [ 'message' => __( 'You are not allowed to reorder sites.', 'intuitive-custom-post-order' ) ], 403 );
 		}
-
 		if ( ! isset( $_POST['order'] ) ) {
-			return;
+			wp_send_json_error( [ 'message' => __( 'Missing order payload.', 'intuitive-custom-post-order' ) ], 400 );
 		}
 
 		$order = sanitize_text_field( wp_unslash( $_POST['order'] ) );
 		parse_str( $order, $data );
-
 		if ( ! is_array( $data ) ) {
-			return false;
+			wp_send_json_error( [ 'message' => __( 'Invalid order payload.', 'intuitive-custom-post-order' ) ], 400 );
 		}
 
 		$id_arr = [];
 		foreach ( $data as $key => $values ) {
 			foreach ( $values as $position => $id ) {
-				$id_arr[] = $id;
+				$id_arr[] = absint( $id );
 			}
 		}
 
@@ -626,9 +663,16 @@ class Hicpo {
 
 		foreach ( $data as $key => $values ) {
 			foreach ( $values as $position => $id ) {
-				$wpdb->update( $wpdb->blogs, [ 'menu_order' => $position + 1 ], [ 'blog_id' => intval( $id ) ] );
+				$wpdb->update(
+					$wpdb->blogs,
+					[ 'menu_order' => (int) $position + 1 ],
+					[ 'blog_id' => absint( $id ) ],
+					[ '%d' ],
+					[ '%d' ]
+				);
 			}
 		}
+		wp_send_json_success( [ 'message' => __( 'Order updated.', 'intuitive-custom-post-order' ) ] );
 	}
 
 	/**
@@ -740,8 +784,8 @@ class Hicpo {
 				}
 			}
 		}
-
-		wp_redirect( 'admin.php?page=hicpo-settings&msg=update' );
+		wp_redirect( admin_url( 'admin.php?page=hicpo-settings&msg=update' ) );
+		exit;
 	}
 
 	public function hicpo_update_network_options() {
@@ -755,8 +799,8 @@ class Hicpo {
 
 		$hicpo_network_sites = isset( $_POST['sites'] ) ? sanitize_text_field( wp_unslash( $_POST['sites'] ) ) : 0;
 
-		update_option( 'hicpo_network_sites', $hicpo_network_sites );
-
+		update_site_option( 'hicpo_network_sites', $hicpo_network_sites );
+		
 		// Initial
 		$result = $wpdb->get_results(
 			"
@@ -777,7 +821,8 @@ class Hicpo {
 			}
 		}
 
-		wp_redirect( 'settings.php?page=hicpo-network-settings&msg=update' );
+		wp_redirect( network_admin_url( 'settings.php?page=hicpo-network-settings&msg=update' ) );
+		exit;
 	}
 
 	public function hicpo_previous_post_where( $where ) {
@@ -841,7 +886,7 @@ class Hicpo {
 	public function hicpo_pre_get_posts( $wp_query ) {
 		$objects = $this->hicpo_get_options_objects();
 		if ( empty( $objects ) ) {
-			return false;
+			return;
 		}
 
 		/**
@@ -878,7 +923,7 @@ class Hicpo {
 					}
 				}
 				// post
-			} elseif ( in_array( 'post', $objects ) ) {
+			} elseif ( in_array( 'post', $objects, true ) ) {
 					$active = true;
 			}
 
@@ -888,10 +933,10 @@ class Hicpo {
 
 			// get_posts()
 			if ( isset( $wp_query->query['suppress_filters'] ) ) {
-				if ( $wp_query->get( 'orderby' ) == 'date' || $wp_query->get( 'orderby' ) == 'menu_order' ) {
+				if ( in_array( $wp_query->get( 'orderby' ), [ 'date', 'menu_order' ], true ) ) {
 					$wp_query->set( 'orderby', 'menu_order' );
 					$wp_query->set( 'order', 'ASC' );
-				} elseif ( $wp_query->get( 'orderby' ) == 'default_date' ) {
+				} elseif ( 'default_date' === $wp_query->get( 'orderby' ) ) {
 					$wp_query->set( 'orderby', 'date' );
 				}
 				// WP_Query( contain main_query )
@@ -961,17 +1006,12 @@ class Hicpo {
 		if ( is_admin() ) {
 			return $pieces;
 		}
-		if ( 1 != $blog_id ) {
-			switch_to_blog( 1 );
-			$hicpo_network_sites = get_option( 'hicpo_network_sites' );
-			restore_current_blog();
-			if ( ! $hicpo_network_sites ) {
-				return $pieces;
-			}
-		} elseif ( ! get_option( 'hicpo_network_sites' ) ) {
-				return $pieces;
-		}
 
+		$enabled = get_site_option( 'hicpo_network_sites' );
+		if ( ! $enabled ) {
+			return $pieces;
+		}
+		
 		global $wp_version;
 		if ( version_compare( $wp_version, '4.6.0' ) >= 0 ) {
 			// サイト並び替え指定がデフォルトの場合のみ並び替え
@@ -984,16 +1024,11 @@ class Hicpo {
 
 	public function hicpo_get_blogs_of_user( $blogs ) {
 		global $blog_id;
-		if ( 1 != $blog_id ) {
-			switch_to_blog( 1 );
-			$hicpo_network_sites = get_option( 'hicpo_network_sites' );
-			restore_current_blog();
-			if ( ! $hicpo_network_sites ) {
-				return $blogs;
-			}
-		} elseif ( ! get_option( 'hicpo_network_sites' ) ) {
-				return $blogs;
+
+		if ( ! get_site_option( 'hicpo_network_sites' ) ) {
+			return $blogs;
 		}
+
 		global $wpdb, $wp_version;
 
 		if ( version_compare( $wp_version, '4.6.0' ) >= 0 ) {
@@ -1050,15 +1085,8 @@ class Hicpo {
 	public function hicpo_refresh_front_network() {
 		 global $wp_version;
 		if ( version_compare( $wp_version, '4.6.0' ) < 0 ) {
-			global $blog_id;
-			if ( 1 != $blog_id ) {
-				$hicpo_network_sites = get_option( 'hicpo_network_sites' );
-				restore_current_blog();
-				if ( ! $hicpo_network_sites ) {
-					return;
-				}
-			} elseif ( ! get_option( 'hicpo_network_sites' ) ) {
-					return;
+			if ( ! get_site_option( 'hicpo_network_sites' ) ) {
+				return;
 			}
 			add_filter( 'query', [ $this, 'hicpo_refresh_front_network_2' ] );
 		}

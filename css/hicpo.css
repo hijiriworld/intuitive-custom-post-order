@@ -14,3 +14,57 @@
 .ui-sortable-placeholder {
 	display: none;
 }
+
+/* Saving indicator */
+body.hicpo-saving {
+	cursor: progress !important;
+}
+body.hicpo-saving .ui-sortable tr {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+/* === Saving spinner (center overlay) === */
+body.hicpo-saving::after {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px; /* center */
+  border: 4px solid #cfd8dc;          /* light gray ring */
+  border-top-color: #2271b1;          /* WP admin blue */
+  border-radius: 50%;
+  animation: hicpo-spin 1s linear infinite;
+  z-index: 100000;                     /* above admin UI */
+  pointer-events: none;                /* do not block clicks (we already disable rows) */
+}
+
+/* Optional: subtle dim background of the list while saving */
+body.hicpo-saving #the-list {
+  position: relative;
+}
+body.hicpo-saving #the-list::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.4);
+  z-index: 1;                          /* sits over rows, under spinner */
+  pointer-events: none;
+}
+
+/* Spinner keyframes */
+@keyframes hicpo-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  body.hicpo-saving::after {
+    animation: none;
+    border-top-color: #2271b1;
+    /* Optional: show static indicator instead of animation */
+  }
+}
